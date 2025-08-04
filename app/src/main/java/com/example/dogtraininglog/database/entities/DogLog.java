@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 import com.example.dogtraininglog.database.DogTrainingDatabase;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 @Entity(tableName = DogTrainingDatabase.DOG_LOG_TABLE)
@@ -14,27 +15,31 @@ public class DogLog {
     @PrimaryKey(autoGenerate = true)
     private Integer id;
 
-    private String exercise;
-    private double weight;
+    private String activity;
+
     private int reps;
+
+    private boolean successful;
     private LocalDateTime date;
     private int userId;
 
-    public DogLog(String exercise, double weight, int reps, int userId) {
-        this.exercise = exercise;
-        this.weight = weight;
+    public DogLog(String activity, int reps, boolean successful, int userId) {
+        this.activity = activity;
         this.reps = reps;
+        this.successful = successful;
         this.userId = userId;
         date = LocalDateTime.now();
     }
 
+    public DogLog(){}
+
     @NonNull
     @Override
     public String toString() {
-        return exercise + '\n' +
-                "weight: " + weight + '\n' +
-                "reps: " + reps + '\n' +
-                "date: " + date.toString() +'\n' +
+        return activity + '\n' +
+                "Repetitions: " + reps + '\n' +
+                "Sucessful? " + successful + '\n' +
+                "Date: " + date.format(DateTimeFormatter.ofPattern("MMM d, yyyy 'at' h:mm a")) +'\n' +
                 "=-=-=-=-=-=-=-=-=-=\n";
     }
 
@@ -42,12 +47,12 @@ public class DogLog {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         DogLog dogLog = (DogLog) o;
-        return Double.compare(weight, dogLog.weight) == 0 && reps == dogLog.reps && userId == dogLog.userId && Objects.equals(id, dogLog.id) && Objects.equals(exercise, dogLog.exercise) && Objects.equals(date, dogLog.date);
+        return reps == dogLog.reps && successful == dogLog.successful && userId == dogLog.userId && Objects.equals(id, dogLog.id) && Objects.equals(activity, dogLog.activity) && Objects.equals(date, dogLog.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, exercise, weight, reps, date, userId);
+        return Objects.hash(id, activity, reps, successful, date, userId);
     }
 
     public Integer getId() {
@@ -58,20 +63,12 @@ public class DogLog {
         this.id = id;
     }
 
-    public String getExercise() {
-        return exercise;
+    public String getActivity() {
+        return activity;
     }
 
-    public void setExercise(String exercise) {
-        this.exercise = exercise;
-    }
-
-    public double getWeight() {
-        return weight;
-    }
-
-    public void setWeight(double weight) {
-        this.weight = weight;
+    public void setActivity(String activity) {
+        this.activity = activity;
     }
 
     public int getReps() {
@@ -96,5 +93,13 @@ public class DogLog {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public boolean isSuccessful() {
+        return successful;
+    }
+
+    public void setSuccessful(boolean successful) {
+        this.successful = successful;
     }
 }

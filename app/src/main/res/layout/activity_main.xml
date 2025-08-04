@@ -21,7 +21,7 @@
         />
 
     <TextView
-        android:id="@+id/exerciseLabelTextView"
+        android:id="@+id/trainingLabelTextView"
         android:layout_width="100dp"
         android:layout_height="36dp"
         android:layout_marginStart="16dp"
@@ -34,18 +34,18 @@
         />
 
     <EditText
-        android:id="@+id/exerciseInputEditText"
+        android:id="@+id/trainingInputEditText"
         android:layout_width="273dp"
         android:layout_height="39dp"
         android:layout_marginStart="8dp"
         android:hint="@string/enter_an_exercise"
         android:inputType="textAutoComplete"
         android:padding="8dp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/exerciseLabelTextView"
-        app:layout_constraintStart_toEndOf="@id/exerciseLabelTextView" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/trainingLabelTextView"
+        app:layout_constraintStart_toEndOf="@id/trainingLabelTextView" />
 
     <TextView
-        android:id="@+id/weightLabelTextView"
+        android:id="@+id/repetitionsLabelTextView"
         android:layout_width="100dp"
         android:layout_height="36dp"
         android:layout_marginStart="16dip"
@@ -53,21 +53,21 @@
         android:text="@string/weight"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/exerciseLabelTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/trainingLabelTextView" />
 
     <EditText
-        android:id="@+id/weightInputEditText"
+        android:id="@+id/repetitionsInputEditText"
         android:layout_width="273dp"
         android:layout_height="39dp"
         android:layout_marginStart="8dp"
         android:hint="@string/enter_reps"
         android:inputType="number|numberDecimal"
         android:padding="8dp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/weightLabelTextView"
-        app:layout_constraintStart_toEndOf="@id/weightLabelTextView" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/repetitionsLabelTextView"
+        app:layout_constraintStart_toEndOf="@id/repetitionsLabelTextView" />
 
     <TextView
-        android:id="@+id/repsLabelTextView"
+        android:id="@+id/SuccessLabelTextView"
         android:layout_width="100dp"
         android:layout_height="36dp"
         android:layout_marginStart="16dip"
@@ -75,18 +75,16 @@
         android:text="@string/reps"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/weightLabelTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/repetitionsLabelTextView" />
 
-    <EditText
-        android:id="@+id/repInputEditText"
-        android:layout_width="273dp"
-        android:layout_height="39dp"
+    <CheckBox
+        android:id="@+id/successCheckbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:hint="@string/enter_success"
-        android:inputType="number"
-        android:padding="8dp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/repsLabelTextView"
-        app:layout_constraintStart_toEndOf="@id/repsLabelTextView" />
+        android:text="Check if training was successful."
+        app:layout_constraintBaseline_toBaselineOf="@+id/SuccessLabelTextView"
+        app:layout_constraintStart_toEndOf="@id/SuccessLabelTextView" />
 
     <Button
         android:id="@+id/logButton"
@@ -97,5 +95,5 @@
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/repInputEditText" />
+        app:layout_constraintTop_toBottomOf="@id/successCheckbox" />
 </androidx.constraintlayout.widget.ConstraintLayout>
