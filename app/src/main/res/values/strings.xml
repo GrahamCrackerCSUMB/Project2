@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">DogTrainingLog</string>
+    <string name="exercise">Training</string>
+    <string name="enter_an_exercise">Enter a type of dog training.</string>
+    <string name="weight">Reps</string>
+    <string name="enter_reps">Enter how many times you trained it.</string>
+    <string name="enter_success">Enter if the training was successful.</string>
+    <string name="reps">Success</string>
+    <string name="log">Log</string>
+    <string name="nothing_to_show_time_to_hit_the_gym">Nothing to show, better do some training!</string>
+    <string name="login_welcome">Welcome to the DogTrainingLog. Please Sign in.</string>
+    <string name="username">Username</string>
+    <string name="please_enter_password">Please enter password</string>
+    <string name="password">Password</string>
+    <string name="login">Login!</string>
+    <string name="preference_file_key">doglogPreferenceFileNameDoglog</string>
+    <string name="preference_userId_key">dogLogPreferenceUserIdKeyDogLog</string>
+</resources>
