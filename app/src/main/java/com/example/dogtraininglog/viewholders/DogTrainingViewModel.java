@@ -13,13 +13,9 @@ import java.util.List;
 public class DogTrainingViewModel extends AndroidViewModel {
     private final DogTrainingLogRepository repository;
 
-   // private final LiveData<List<GymLog>> allLogsById;
-
     public DogTrainingViewModel(Application application){
         super(application);
         repository = DogTrainingLogRepository.getRepository(application);
-     //   allLogsById = repository.getAllLogsByUserIdLiveData(userId);
-
     }
 
     public LiveData<List<DogLog>> getAllLogsById(int userId) {

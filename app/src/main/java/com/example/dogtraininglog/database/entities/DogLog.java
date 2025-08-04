@@ -47,7 +47,9 @@ public class DogLog {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         DogLog dogLog = (DogLog) o;
-        return reps == dogLog.reps && successful == dogLog.successful && userId == dogLog.userId && Objects.equals(id, dogLog.id) && Objects.equals(activity, dogLog.activity) && Objects.equals(date, dogLog.date);
+        return reps == dogLog.reps && successful == dogLog.successful && userId == dogLog.userId &&
+                Objects.equals(id, dogLog.id) && Objects.equals(activity, dogLog.activity)
+                && Objects.equals(date, dogLog.date);
     }
 
     @Override
