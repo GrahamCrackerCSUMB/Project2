@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">DogTrainingLog</string>
     <string name="exercise">Training</string>
-    <string name="enter_an_exercise">Enter a type of dog training.</string>
+    <string name="enter_an_exercise">Enter type of dog training.</string>
     <string name="weight">Reps</string>
-    <string name="enter_reps">Enter how many times you trained it.</string>
+    <string name="enter_reps">Enter # of times trained.</string>
     <string name="enter_success">Enter if the training was successful.</string>
     <string name="reps">Success</string>
     <string name="log">Log</string>
