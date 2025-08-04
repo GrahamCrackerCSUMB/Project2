@@ -22,7 +22,7 @@ public class DogTrainingLogViewHolder extends RecyclerView.ViewHolder {
 
     static DogTrainingLogViewHolder create(ViewGroup parent){
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.doglog_recylcer_item, parent, false);
+                .inflate(R.layout.doglog_recycler_item, parent, false);
         return new DogTrainingLogViewHolder(view);
     }
 }

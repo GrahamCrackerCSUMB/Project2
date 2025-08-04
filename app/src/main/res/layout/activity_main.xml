@@ -17,7 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/doglog_recylcer_item"
+        tools:listitem="@layout/doglog_recycler_item"
         />
 
     <TextView

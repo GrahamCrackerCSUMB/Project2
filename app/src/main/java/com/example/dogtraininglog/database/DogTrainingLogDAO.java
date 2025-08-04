@@ -15,6 +15,9 @@ public interface DogTrainingLogDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert (DogLog dogTrainingLog);
 
+    @Query("SELECT * FROM dogLogTable")
+    LiveData<List<DogLog>> getAllLogs();
+
     @Query("SELECT * FROM " + DogTrainingDatabase.DOG_LOG_TABLE + " ORDER BY date DESC" )
     List<DogLog> getAllRecords();
 
