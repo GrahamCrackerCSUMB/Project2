@@ -53,10 +53,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     public static final String TAG = "DAC_GYMLOG";
-    String mExercise = "";
-    double mWeight = 0.0;
+    String mActivity = "";
     int mReps = 0;
 
+    boolean mSuccessful = false;
 
     private int loggedInUserId = -1;
     private User user;
@@ -91,9 +91,7 @@ public class MainActivity extends AppCompatActivity {
         }
         updateSharedPreference();
 
-//TODO REMOVE
-        //   binding.logDisplayTextView.setMovementMethod(new ScrollingMovementMethod());
-        //  upDateDisplay();
+
         binding.logButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,14 +101,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /* TODO: remove this block
-        binding.exerciseInputEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                upDateDisplay();
-            }
-        });
-*/
     }
 
     private void loginUser(Bundle savedInstanceState) {
@@ -223,10 +213,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void insertGymLogRecord(){
-        if (mExercise.isEmpty()){
+        if (mActivity.isEmpty()){
             return;
         }
-        DogLog log = new DogLog(mExercise, mWeight, mReps,loggedInUserId);
+        DogLog log = new DogLog(mActivity, mReps, mSuccessful,loggedInUserId);
         repository.insertGymLog(log);
     }
 
@@ -248,18 +238,14 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void getInformationFromDisplay(){
-        mExercise = binding.exerciseInputEditText.getText().toString();
+        mActivity = binding.trainingInputEditText.getText().toString();
 
         try{
-            mWeight = Double.parseDouble(binding.weightInputEditText.getText().toString());
+            mReps = Integer.parseInt(binding.repetitionsInputEditText.getText().toString());
         } catch (NumberFormatException e){
-            Log.d(TAG, "Error reading value from Weight edit text.");
+            Log.d(TAG, "Error reading value from reps edit text.");
         }
 
-        try{
-            mReps = Integer.parseInt(binding.repInputEditText.getText().toString());
-        } catch (NumberFormatException e){
-            Log.d(TAG, "Error reading value from eps edit text.");
-        }
+        mSuccessful = binding.successCheckbox.isChecked();
     }
 }

@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 import com.example.dogtraininglog.database.DogTrainingDatabase;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 @Entity(tableName = DogTrainingDatabase.DOG_LOG_TABLE)
@@ -22,7 +23,7 @@ public class DogLog {
     private LocalDateTime date;
     private int userId;
 
-    public DogLog(String exercise, double weight, int reps, int userId) {
+    public DogLog(String activity, int reps, boolean successful, int userId) {
         this.activity = activity;
         this.reps = reps;
         this.successful = successful;
@@ -30,13 +31,15 @@ public class DogLog {
         date = LocalDateTime.now();
     }
 
+    public DogLog(){}
+
     @NonNull
     @Override
     public String toString() {
         return activity + '\n' +
                 "Repetitions: " + reps + '\n' +
                 "Sucessful? " + successful + '\n' +
-                "Date: " + date.toString() +'\n' +
+                "Date: " + date.format(DateTimeFormatter.ofPattern("MMM d, yyyy 'at' h:mm a")) +'\n' +
                 "=-=-=-=-=-=-=-=-=-=\n";
     }
 
@@ -64,7 +67,7 @@ public class DogLog {
         return activity;
     }
 
-    public void setActivity(String exercise) {
+    public void setActivity(String activity) {
         this.activity = activity;
     }
 

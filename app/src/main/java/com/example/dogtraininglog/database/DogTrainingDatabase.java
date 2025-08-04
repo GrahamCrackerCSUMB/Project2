@@ -19,7 +19,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @TypeConverters(LocalDateTypeConverter.class)
-@Database(entities = {DogLog.class, User.class}, version = 3, exportSchema = false)
+@Database(entities = {DogLog.class, User.class}, version = 4, exportSchema = false)
 public abstract class DogTrainingDatabase extends RoomDatabase {
 
     public static final String USER_TABLE = "usertable";
