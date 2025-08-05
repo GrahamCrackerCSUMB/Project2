@@ -18,6 +18,7 @@ import com.example.dogtraininglog.database.typeConverters.LocalDateTypeConverter
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+//Here we have defined our database.
 @TypeConverters(LocalDateTypeConverter.class)
 @Database(entities = {DogLog.class, User.class}, version = 4, exportSchema = false)
 public abstract class DogTrainingDatabase extends RoomDatabase {
@@ -34,6 +35,7 @@ public abstract class DogTrainingDatabase extends RoomDatabase {
     public static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
+    //Here is our singleton method to get a database instance.
     static DogTrainingDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (DogTrainingDatabase.class) {
