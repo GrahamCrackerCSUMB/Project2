@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,6 +34,12 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 verifyUser();
             }
+        });
+
+        Button newUserBtn = findViewById(R.id.newUserButton);
+        newUserBtn.setOnClickListener(v -> {
+            Intent i = new Intent(LoginActivity.this, RegisterActivity.class);
+            startActivity(i);
         });
     }
 

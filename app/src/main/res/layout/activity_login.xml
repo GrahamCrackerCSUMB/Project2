@@ -52,6 +52,17 @@
         />
 
     <Button
+        android:id="@+id/newUserButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="NEW USER"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/loginButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
         android:id="@+id/loginButton"
         android:layout_width="match_parent"
         android:layout_height="105dp"

@@ -30,4 +30,7 @@ public interface UserDAO {
 
     @Query("SELECT * from " + DogTrainingDatabase.USER_TABLE + " WHERE id == :userId")
     LiveData<User> getUserByUserId(int userId);
+
+    @Query("SELECT * FROM usertable WHERE username = :u LIMIT 1")
+    User getByUsernameSync(String u);
 }
