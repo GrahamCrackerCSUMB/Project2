@@ -78,9 +78,7 @@ public class DogTrainingLogRepository {
     }
 
     public void insertUser(User... user) {
-        DogTrainingDatabase.databaseWriteExecutor.execute(() -> {
             userDAO.insert(user);
-        });
     }
 
     public LiveData<User> getUserByUserName(String username) {
