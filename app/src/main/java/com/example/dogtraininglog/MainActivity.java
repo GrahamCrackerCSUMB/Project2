@@ -222,6 +222,20 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    //click listener for logout button
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.logoutMenuItem) {
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
     @Deprecated
     private void upDateDisplay() {
         ArrayList<DogLog> allLogs = repository.getAllLogsByUserId(loggedInUserId);
