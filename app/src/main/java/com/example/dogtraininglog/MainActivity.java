@@ -104,34 +104,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loginUser(Bundle savedInstanceState) {
-        //check shared preferencce for logged in user
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(getString(R.string.preference_file_key),
-                Context.MODE_PRIVATE);
+        final int LOGGED_OUT = -1;
 
-        loggedInUserId = sharedPreferences.getInt(getString(R.string.preference_userId_key), LOGGED_OUT);
+        SharedPreferences sp = getApplicationContext()
+                .getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
-        if(loggedInUserId == LOGGED_OUT & savedInstanceState != null && savedInstanceState.containsKey(SAVED_INSTANCE_STATE_USERID_KEY)){
-            loggedInUserId = savedInstanceState.getInt(SAVED_INSTANCE_STATE_USERID_KEY, LOGGED_OUT);
-        }
-        if (loggedInUserId == LOGGED_OUT){
-            loggedInUserId = getIntent().getIntExtra(MAIN_ACTIVITY_USER_ID, LOGGED_OUT);
-        }
-        if (loggedInUserId == LOGGED_OUT){
-            return;
+        int prefId   = sp.getInt(getString(R.string.preference_userId_key), LOGGED_OUT);
+        int intentId = getIntent().getIntExtra(MAIN_ACTIVITY_USER_ID, LOGGED_OUT);
+        int savedId  = (savedInstanceState != null && savedInstanceState.containsKey(SAVED_INSTANCE_STATE_USERID_KEY))
+                ? savedInstanceState.getInt(SAVED_INSTANCE_STATE_USERID_KEY, LOGGED_OUT)
+                : LOGGED_OUT;
+
+        if (savedId != LOGGED_OUT) {
+            loggedInUserId = savedId;
+        } else if (intentId != LOGGED_OUT) {
+            loggedInUserId = intentId;
+        } else {
+            loggedInUserId = prefId;
         }
 
-        LiveData<User> userObserver = repository.getUserByUserId(loggedInUserId);
-        userObserver.observe(this, user -> {
-            this.user = user;
-            if (this.user != null) {
-                this.user = user;
-                invalidateOptionsMenu();
-            }else{
-                //TODO VERIF IF ISSUE?
-                // logout();
-            }
+        if (loggedInUserId == LOGGED_OUT) return;
+
+        sp.edit().putInt(getString(R.string.preference_userId_key), loggedInUserId).apply();
+
+        repository.getUserByUserId(loggedInUserId).observe(this, u -> {
+            this.user = u;
+            if (this.user != null) invalidateOptionsMenu();
         });
     }
+
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -191,12 +192,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void logout() {
 
-        loggedInUserId = LOGGED_OUT;
+        loggedInUserId = -1;
 
         updateSharedPreference();
-        getIntent().putExtra(MAIN_ACTIVITY_USER_ID,LOGGED_OUT);
 
-        startActivity(LoginActivity.loginIntentFactory(getApplicationContext()));
+        Intent i = new Intent(MainActivity.this, LoginActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
+        finish();
     }
 
     private void updateSharedPreference(){
