@@ -134,6 +134,10 @@ public class MainActivity extends AppCompatActivity {
                 if (u == null) return;
 
                 if (u.isAdmin()) {
+                    if (getSupportActionBar() != null) {
+                        getSupportActionBar().setSubtitle("ADMIN VIEW");
+                    }
+
                     dogTrainingViewModel.getAllLogs().observe(MainActivity.this,
                             new Observer<List<DogLog>>() {
                                 @Override public void onChanged(List<DogLog> logList) {
@@ -145,6 +149,10 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             });
                 } else {
+                    if (getSupportActionBar() != null) {
+                        getSupportActionBar().setSubtitle(null);
+                    }
+
                     dogTrainingViewModel.getAllLogsById(loggedInUserId).observe(MainActivity.this,
                             new Observer<List<DogLog>>() {
                                 @Override public void onChanged(List<DogLog> logList) {
