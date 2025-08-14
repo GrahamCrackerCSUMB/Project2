@@ -13,3 +13,22 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Android/Gradle
+.gradle/
+build/
+**/build/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Android Studio / IntelliJ
+.idea/
+
+# Keystores & signing
+*.jks
+*.keystore
+signing.properties
+
+# OS junk
+Thumbs.db
