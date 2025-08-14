@@ -22,6 +22,10 @@ public class DogTrainingViewModel extends AndroidViewModel {
         return repository.getAllLogsByUserIdLiveData(userId);
     }
 
+    public LiveData<List<DogLog>> getAllLogs() {   // LiveData version
+        return repository.getAllLogsLive();
+    }
+
     public void insert(DogLog log){
         repository.insertGymLog(log);
     }

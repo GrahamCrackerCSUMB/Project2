@@ -2,6 +2,7 @@ package com.example.dogtraininglog.database.entities;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.ColumnInfo;
 
 import com.example.dogtraininglog.database.DogTrainingDatabase;
 
