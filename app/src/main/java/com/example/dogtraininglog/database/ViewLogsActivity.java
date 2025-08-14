@@ -37,10 +37,10 @@ public class ViewLogsActivity extends AppCompatActivity {
         adapter = new DogLogAdapter(new ArrayList<>());
         recyclerView.setAdapter(adapter);
 
-        DogTrainingLogDAO dao = DogTrainingDatabase.getDatabase(this).dogLogDAO();
-        dao.getAllLogs().observe(this, logs -> {
-            allLogs = logs;
-            adapter.updateList(logs);
+        DogTrainingLogRepository repo = DogTrainingLogRepository.getRepository(getApplication());
+        repo.getAllLogsLive().observe(this, logs -> {
+            allLogs = (logs != null) ? logs : new ArrayList<>();
+            adapter.updateList(allLogs);
         });
 
         binding.searchEditText.addTextChangedListener(new TextWatcher() {

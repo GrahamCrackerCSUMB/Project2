@@ -81,6 +81,11 @@ public class DogTrainingLogRepository {
             userDAO.insert(user);
     }
 
+
+    public LiveData<List<DogLog>> getAllLogsLive() {
+        return dogTrainingLogDAO.getAllLogsLive();
+    }
+
     public LiveData<User> getUserByUserName(String username) {
         return userDAO.getUserByUserName(username);
     }

@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,6 +29,7 @@ import com.example.dogtraininglog.viewholders.DogTrainingLogAdapter;
 import com.example.dogtraininglog.viewholders.DogTrainingViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -61,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
     private int loggedInUserId = -1;
     private User user;
 
+    private final ArrayList<DogLog> currentLogs = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,9 +84,6 @@ public class MainActivity extends AppCompatActivity {
         repository = DogTrainingLogRepository.getRepository(getApplication());
         loginUser(savedInstanceState);
 
-        dogTrainingViewModel.getAllLogsById(loggedInUserId).observe(this, gymLogs -> {
-            adapter.submitList(gymLogs);
-        });
 
         //User is not logged in at this point, go to login screen
         if(loggedInUserId == -1){
@@ -96,39 +97,67 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 getInformationFromDisplay();
-                insertGymLogRecord();
-                //        upDateDisplay();
+                insertDogLogRecord();
             }
         });
 
     }
 
     private void loginUser(Bundle savedInstanceState) {
-        //check shared preferencce for logged in user
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(getString(R.string.preference_file_key),
-                Context.MODE_PRIVATE);
+        final int LOGGED_OUT = -1;
 
-        loggedInUserId = sharedPreferences.getInt(getString(R.string.preference_userId_key), LOGGED_OUT);
+        SharedPreferences sp = getApplicationContext()
+                .getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
-        if(loggedInUserId == LOGGED_OUT & savedInstanceState != null && savedInstanceState.containsKey(SAVED_INSTANCE_STATE_USERID_KEY)){
-            loggedInUserId = savedInstanceState.getInt(SAVED_INSTANCE_STATE_USERID_KEY, LOGGED_OUT);
-        }
-        if (loggedInUserId == LOGGED_OUT){
-            loggedInUserId = getIntent().getIntExtra(MAIN_ACTIVITY_USER_ID, LOGGED_OUT);
-        }
-        if (loggedInUserId == LOGGED_OUT){
-            return;
+        int prefId   = sp.getInt(getString(R.string.preference_userId_key), LOGGED_OUT);
+        int intentId = getIntent().getIntExtra(MAIN_ACTIVITY_USER_ID, LOGGED_OUT);
+        int savedId  = (savedInstanceState != null && savedInstanceState.containsKey(SAVED_INSTANCE_STATE_USERID_KEY))
+                ? savedInstanceState.getInt(SAVED_INSTANCE_STATE_USERID_KEY, LOGGED_OUT)
+                : LOGGED_OUT;
+
+        if (savedId != LOGGED_OUT) {
+            loggedInUserId = savedId;
+        } else if (intentId != LOGGED_OUT) {
+            loggedInUserId = intentId;
+        } else {
+            loggedInUserId = prefId;
         }
 
-        LiveData<User> userObserver = repository.getUserByUserId(loggedInUserId);
-        userObserver.observe(this, user -> {
-            this.user = user;
-            if (this.user != null) {
-                this.user = user;
+        if (loggedInUserId == LOGGED_OUT) return;
+
+        sp.edit().putInt(getString(R.string.preference_userId_key), loggedInUserId).apply();
+
+        LiveData<User> userLive = repository.getUserByUserId(loggedInUserId);
+        userLive.observe(this, new Observer<User>() {
+            @Override public void onChanged(User u) {
+                MainActivity.this.user = u;
+                if (u == null) return;
+
+                if (u.isAdmin()) {
+                    dogTrainingViewModel.getAllLogs().observe(MainActivity.this,
+                            new Observer<List<DogLog>>() {
+                                @Override public void onChanged(List<DogLog> logList) {
+                                    currentLogs.clear();
+                                    if (logList != null) currentLogs.addAll(logList);
+                                    DogTrainingLogAdapter adapter =
+                                            (DogTrainingLogAdapter) binding.logDisplayRecyclerView.getAdapter();
+                                    if (adapter != null) adapter.submitList(new ArrayList<>(currentLogs));
+                                }
+                            });
+                } else {
+                    dogTrainingViewModel.getAllLogsById(loggedInUserId).observe(MainActivity.this,
+                            new Observer<List<DogLog>>() {
+                                @Override public void onChanged(List<DogLog> logList) {
+                                    currentLogs.clear();
+                                    if (logList != null) currentLogs.addAll(logList);
+                                    DogTrainingLogAdapter adapter =
+                                            (DogTrainingLogAdapter) binding.logDisplayRecyclerView.getAdapter();
+                                    if (adapter != null) adapter.submitList(new ArrayList<>(currentLogs));
+                                }
+                            });
+                }
+
                 invalidateOptionsMenu();
-            }else{
-                //TODO VERIF IF ISSUE?
-                // logout();
             }
         });
     }
@@ -191,12 +220,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void logout() {
 
-        loggedInUserId = LOGGED_OUT;
+        loggedInUserId = -1;
 
         updateSharedPreference();
-        getIntent().putExtra(MAIN_ACTIVITY_USER_ID,LOGGED_OUT);
 
-        startActivity(LoginActivity.loginIntentFactory(getApplicationContext()));
+        Intent i = new Intent(MainActivity.this, LoginActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
+        finish();
     }
 
     private void updateSharedPreference(){
@@ -212,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
         return intent;
     }
 
-    private void insertGymLogRecord(){
+    private void insertDogLogRecord(){
         if (mActivity.isEmpty()){
             return;
         }

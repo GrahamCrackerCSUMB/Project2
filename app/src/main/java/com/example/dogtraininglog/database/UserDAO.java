@@ -25,12 +25,12 @@ public interface UserDAO {
     @Query("DELETE from " + DogTrainingDatabase.USER_TABLE)
     void deleteAll();
 
-    @Query("SELECT * from " + DogTrainingDatabase.USER_TABLE + " WHERE username == :username")
+    @Query("SELECT * from " + DogTrainingDatabase.USER_TABLE + " WHERE username == :username LIMIT 1")
     LiveData<User> getUserByUserName(String username);
 
-    @Query("SELECT * from " + DogTrainingDatabase.USER_TABLE + " WHERE id == :userId")
+    @Query("SELECT * from " + DogTrainingDatabase.USER_TABLE + " WHERE id == :userId LIMIT 1")
     LiveData<User> getUserByUserId(int userId);
 
-    @Query("SELECT * FROM usertable WHERE username = :u LIMIT 1")
+    @Query("SELECT * FROM " + DogTrainingDatabase.USER_TABLE + " WHERE username = :u LIMIT 1")
     User getByUsernameSync(String u);
 }
