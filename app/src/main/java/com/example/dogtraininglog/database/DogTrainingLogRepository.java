@@ -25,7 +25,7 @@ public class DogTrainingLogRepository {
 
     private DogTrainingLogRepository(Application application){
         DogTrainingDatabase db = DogTrainingDatabase.getDatabase(application);
-        this.dogTrainingLogDAO = db.dogLogDAO();
+        this.dogTrainingLogDAO = db.dogTrainingLogDAO();
         this.userDAO = db.userDAO();
         this.allLogs = (ArrayList<DogLog>) this.dogTrainingLogDAO.getAllRecords();
     }
