@@ -6,7 +6,6 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 
 import com.example.dogtraininglog.MainActivity;
-import com.example.dogtraininglog.database.entities.DogLog;
 import com.example.dogtraininglog.database.entities.User;
 
 import java.util.ArrayList;

@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dogtraininglog.R;
-import com.example.dogtraininglog.database.entities.DogLog;
+import com.example.dogtraininglog.database.DogLog;
 
 import java.util.List;
 
