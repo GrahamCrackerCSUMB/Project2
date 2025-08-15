@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
-import com.example.dogtraininglog.database.entities.DogLog;
+import com.example.dogtraininglog.database.DogLog;
 
 public class DogTrainingLogAdapter extends ListAdapter<DogLog, DogTrainingLogViewHolder> {
   public DogTrainingLogAdapter(@NonNull DiffUtil.ItemCallback<DogLog> diffCallback){

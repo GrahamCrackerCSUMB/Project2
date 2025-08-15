@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.dogtraininglog.database.DogTrainingLogRepository;
-import com.example.dogtraininglog.database.entities.DogLog;
+import com.example.dogtraininglog.database.DogLog;
 import com.example.dogtraininglog.database.entities.User;
 import com.example.dogtraininglog.databinding.ActivityMainBinding;
 import com.example.dogtraininglog.viewholders.DogTrainingLogAdapter;

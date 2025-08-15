@@ -14,11 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.dogtraininglog.database.entities.DogLog;
 import com.example.dogtraininglog.databinding.ActivityViewLogsBinding;
 
 import java.util.List;
-import java.util.concurrent.Executors;
 
 public class ViewLogsActivity extends AppCompatActivity {
 

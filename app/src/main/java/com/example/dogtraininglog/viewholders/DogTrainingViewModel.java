@@ -6,7 +6,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.dogtraininglog.database.DogTrainingLogRepository;
-import com.example.dogtraininglog.database.entities.DogLog;
+import com.example.dogtraininglog.database.DogLog;
 
 import java.util.List;
 

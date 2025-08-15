@@ -11,7 +11,7 @@ import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.dogtraininglog.MainActivity;
-import com.example.dogtraininglog.database.entities.DogLog;
+import com.example.dogtraininglog.database.entities.Dog;
 import com.example.dogtraininglog.database.entities.User;
 import com.example.dogtraininglog.database.typeConverters.LocalDateTypeConverter;
 
@@ -20,13 +20,18 @@ import java.util.concurrent.Executors;
 
 //Here we have defined our database.
 @TypeConverters(LocalDateTypeConverter.class)
-@Database(entities = {DogLog.class, User.class}, version = 4, exportSchema = false)
+@Database(entities = {DogLog.class, User.class, Dog.class}, version = 5, exportSchema = false)
 public abstract class DogTrainingDatabase extends RoomDatabase {
 
     public static final String USER_TABLE = "usertable";
     private static final String DATABASE_NAME = "DogTrainingDatabase";
 
     public static final String DOG_LOG_TABLE = "dogLogTable";
+
+    public abstract DogDAO dogDAO();
+    public abstract DogTrainingLogDAO dogTrainingLogDAO();
+    public abstract UserDAO userDAO();
+
 
     private static volatile DogTrainingDatabase INSTANCE;
 
@@ -71,7 +76,4 @@ public abstract class DogTrainingDatabase extends RoomDatabase {
         }
     };
 
-    public abstract DogTrainingLogDAO dogLogDAO();
-
-    public abstract UserDAO userDAO();
 }

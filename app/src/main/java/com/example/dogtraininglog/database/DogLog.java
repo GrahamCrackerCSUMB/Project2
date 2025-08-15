@@ -1,10 +1,8 @@
-package com.example.dogtraininglog.database.entities;
+package com.example.dogtraininglog.database;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-
-import com.example.dogtraininglog.database.DogTrainingDatabase;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
