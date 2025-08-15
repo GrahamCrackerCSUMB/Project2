@@ -26,6 +26,8 @@ public abstract class DogTrainingDatabase extends RoomDatabase {
     public static final String USER_TABLE = "usertable";
     private static final String DATABASE_NAME = "DogTrainingDatabase";
 
+    public static final String DOG = "Dog";
+
     public static final String DOG_LOG_TABLE = "dogLogTable";
 
     public abstract DogDAO dogDAO();
