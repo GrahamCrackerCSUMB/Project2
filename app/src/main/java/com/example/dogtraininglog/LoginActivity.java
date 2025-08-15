@@ -21,7 +21,8 @@ public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
     private DogTrainingLogRepository repository;
 
-
+    public static final String EXTRA_USER_ID = "com.example.dogtraininglog.extra.USER_ID";
+    public static final String EXTRA_USERNAME = "com.example.dogtraininglog.extra.USERNAME";
 
 
     @Override
@@ -75,6 +76,8 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
         private void toastMaker (String message){
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
