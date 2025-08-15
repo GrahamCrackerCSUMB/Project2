@@ -6,7 +6,6 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 
 import com.example.dogtraininglog.MainActivity;
-import com.example.dogtraininglog.database.entities.DogLog;
 import com.example.dogtraininglog.database.entities.User;
 
 import java.util.ArrayList;
@@ -15,6 +14,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+/*This class creates an API to access data. It also centralizes threading so writes
+* go on a background thread. Viewmodel depends on this.*/
 public class DogTrainingLogRepository {
 
     private final DogTrainingLogDAO dogTrainingLogDAO;
@@ -24,9 +25,10 @@ public class DogTrainingLogRepository {
 
     private static DogTrainingLogRepository repository;
 
+    /*Get singleton room database instance, then get the DAO*/
     private DogTrainingLogRepository(Application application){
         DogTrainingDatabase db = DogTrainingDatabase.getDatabase(application);
-        this.dogTrainingLogDAO = db.dogLogDAO();
+        this.dogTrainingLogDAO = db.dogTrainingLogDAO();
         this.userDAO = db.userDAO();
         this.allLogs = (ArrayList<DogLog>) this.dogTrainingLogDAO.getAllRecords();
     }
@@ -52,6 +54,7 @@ public class DogTrainingLogRepository {
         return null;
     }
 
+
     public ArrayList<DogLog> getAllLogs() {
         Future<ArrayList<DogLog>> future = DogTrainingDatabase.databaseWriteExecutor.submit(
                 new Callable<ArrayList<DogLog>>() {
@@ -70,7 +73,7 @@ public class DogTrainingLogRepository {
         return null;
     }
 
-    public void insertGymLog(DogLog dogTrainingLog) {
+    public void insertDogLog(DogLog dogTrainingLog) {
         DogTrainingDatabase.databaseWriteExecutor.execute(() ->
         {
             dogTrainingLogDAO.insert(dogTrainingLog);

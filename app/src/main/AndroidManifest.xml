@@ -17,6 +17,8 @@
         <activity android:name="com.example.dogtraininglog.database.ViewLogsActivity"
             android:exported="true" />
         <activity android:name=".RegisterActivity" />
+        <activity android:name=".SelectDogActivity" />
+        <activity android:name=".AddDogActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

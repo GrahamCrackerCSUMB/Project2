@@ -14,26 +14,31 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.dogtraininglog.database.entities.DogLog;
 import com.example.dogtraininglog.databinding.ActivityViewLogsBinding;
 
 import java.util.List;
-import java.util.concurrent.Executors;
 
 public class ViewLogsActivity extends AppCompatActivity {
 
+    /*RecylcerView to display the logs in a scrolling list*/
     private RecyclerView recyclerView;
+
+    /*This binds the doglog data to each row*/
     private DogLogAdapter adapter;
+
+    /*List of all logs*/
     private List<DogLog> allLogs;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /*Inflate recycler view*/
         ActivityViewLogsBinding binding = ActivityViewLogsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         recyclerView = binding.logsRecyclerView;
+        /*Use the layout manager for recylcer view*/
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        /*Create the adapter and attach it to recyler view*/
         adapter = new DogLogAdapter(new ArrayList<>());
         recyclerView.setAdapter(adapter);
 
@@ -54,14 +59,17 @@ public class ViewLogsActivity extends AppCompatActivity {
         });
     }
 
+    /*Search by activity or date*/
     private void filterLogs(String query) {
         List<DogLog> filtered = new ArrayList<>();
         for (DogLog log : allLogs) {
+            /*Make everything lower case to search*/
             if (log.getActivity().toLowerCase().contains(query.toLowerCase()) ||
                     log.getDate().toString().contains(query)) {
                 filtered.add(log);
             }
         }
+        /*Swap the data*/
         adapter.updateList(filtered);
     }
 

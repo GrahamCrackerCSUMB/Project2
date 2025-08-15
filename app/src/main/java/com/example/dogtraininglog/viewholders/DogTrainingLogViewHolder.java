@@ -9,13 +9,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dogtraininglog.R;
 
+/*Viewholders holds referenes to row views and binds the dogtraingin database to them*/
 public class DogTrainingLogViewHolder extends RecyclerView.ViewHolder {
     private final TextView gymLogViewItem;
+
+    /*Look up the row's child view and cache them*/
     private DogTrainingLogViewHolder(View gymLogView){
         super(gymLogView);
         gymLogViewItem = gymLogView.findViewById(R.id.recyclerItemTextview);
     }
 
+    /*Add the data from the DogLog to the row's views*/
     public void bind (String text){
         gymLogViewItem.setText(text);
     }

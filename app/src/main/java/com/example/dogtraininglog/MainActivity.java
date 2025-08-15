@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.dogtraininglog.database.DogTrainingLogRepository;
-import com.example.dogtraininglog.database.entities.DogLog;
+import com.example.dogtraininglog.database.DogLog;
 import com.example.dogtraininglog.database.entities.User;
 import com.example.dogtraininglog.databinding.ActivityMainBinding;
 import com.example.dogtraininglog.viewholders.DogTrainingLogAdapter;
@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    /*Constants*/
 
     private static final String MAIN_ACTIVITY_USER_ID = "com.example.dogtraininglog.MAIN_ACTIVITY_USER_ID";
 
@@ -54,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    public static final String TAG = "DAC_GYMLOG";
+    public static final String TAG = "DAC_DOGLOG";
     String mActivity = "";
     int mReps = 0;
 
@@ -65,22 +67,26 @@ public class MainActivity extends AppCompatActivity {
 
     private final ArrayList<DogLog> currentLogs = new ArrayList<>();
 
+/*Sets up views, listeners, and initial state.*/
 
+    /*Inflate binding and set content view*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
+
         setContentView(binding.getRoot());
 
         dogTrainingViewModel = new ViewModelProvider(this).get(DogTrainingViewModel.class);
 
-
+        /*Wire up recycler view - this displays the training logs*/
         RecyclerView recyclerView = binding.logDisplayRecyclerView;
         final DogTrainingLogAdapter adapter = new DogTrainingLogAdapter(new DogTrainingLogAdapter.GymLogDiff());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        /*Get the repository*/
         repository = DogTrainingLogRepository.getRepository(getApplication());
         loginUser(savedInstanceState);
 
@@ -106,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
     private void loginUser(Bundle savedInstanceState) {
         final int LOGGED_OUT = -1;
 
+        /*Persistance - if you are logged in you stay logged in*/
         SharedPreferences sp = getApplicationContext()
                 .getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
@@ -115,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
                 ? savedInstanceState.getInt(SAVED_INSTANCE_STATE_USERID_KEY, LOGGED_OUT)
                 : LOGGED_OUT;
 
+        /*Look first at save state, then intent, then finally shared preferenes*/
         if (savedId != LOGGED_OUT) {
             loggedInUserId = savedId;
         } else if (intentId != LOGGED_OUT) {
@@ -123,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
             loggedInUserId = prefId;
         }
 
+        /*If we have a user id, log the user and look at their logs.*/
         if (loggedInUserId == LOGGED_OUT) return;
 
         sp.edit().putInt(getString(R.string.preference_userId_key), loggedInUserId).apply();
@@ -133,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.user = u;
                 if (u == null) return;
 
+                /*If admin display admin view*/
                 if (u.isAdmin()) {
                     if (getSupportActionBar() != null) {
                         getSupportActionBar().setSubtitle("ADMIN VIEW");
@@ -170,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /*Make the current user id persistant*/
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -177,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
         updateSharedPreference();
     }
 
+    /*Inflate overflow menu*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflator = getMenuInflater();
@@ -184,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /*Prepare menu to have the username and add a click listener so user an log out */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem item = menu.findItem(R.id.logoutMenuItem);
@@ -191,7 +204,10 @@ public class MainActivity extends AppCompatActivity {
         if(user==null){
             return false;
         }
+        /*Add user name to top*/
         item.setTitle(user.getUsername());
+
+        /*Log out when clicked*/
         item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(@NonNull MenuItem item) {
@@ -203,6 +219,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /*Show dialouge before logging out*/
     private void showLogoutDialog(){
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
         final AlertDialog alertDialog = alertBuilder.create();
@@ -226,6 +243,7 @@ public class MainActivity extends AppCompatActivity {
         alertBuilder.create().show();
     }
 
+    /*Log out and clear task*/
     private void logout() {
 
         loggedInUserId = -1;
@@ -238,6 +256,7 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
+    /*Logged in user id to shared preferences for persistance purposes.*/
     private void updateSharedPreference(){
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(getString(R.string.preference_file_key),
                 Context.MODE_PRIVATE);
@@ -245,18 +264,20 @@ public class MainActivity extends AppCompatActivity {
         sharedPrefEditor.putInt(getString(R.string.preference_userId_key), loggedInUserId);
         sharedPrefEditor.apply();}
 
+    /*Intent - opens mainactivity*/
     static Intent mainActivityIntentFactory(Context context, int userId){
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra(MAIN_ACTIVITY_USER_ID, userId);
         return intent;
     }
 
+    /*Inserts DogLog data*/
     private void insertDogLogRecord(){
         if (mActivity.isEmpty()){
             return;
         }
         DogLog log = new DogLog(mActivity, mReps, mSuccessful,loggedInUserId);
-        repository.insertGymLog(log);
+        repository.insertDogLog(log);
     }
 
 
@@ -274,20 +295,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
-    @Deprecated
-    private void upDateDisplay() {
-        ArrayList<DogLog> allLogs = repository.getAllLogsByUserId(loggedInUserId);
-        if (allLogs.isEmpty()) {
-        }
-        StringBuilder sb = new StringBuilder();
-        for (DogLog log : allLogs) {
-            sb.append(log);
-        }
-    }
-
-
-
+    /*Reads UI field to help construct doglog*/
     private void getInformationFromDisplay(){
         mActivity = binding.trainingInputEditText.getText().toString();
 

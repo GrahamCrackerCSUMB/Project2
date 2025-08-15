@@ -11,8 +11,14 @@ import com.example.dogtraininglog.database.entities.User;
 
 import java.util.List;
 
+
+/*DAO means data access object
+*
+* these are sql operations that run on our table*/
 @Dao
 public interface UserDAO {
+
+    /*Inserts a user row.*/
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(User... user);
 
@@ -20,7 +26,7 @@ public interface UserDAO {
     void delete(User user);
 
     @Query(("SELECT * FROM " + DogTrainingDatabase.USER_TABLE + " ORDER BY username"))
-   LiveData<List<User>> getAllUsers();
+    LiveData<List<User>> getAllUsers();
 
     @Query("DELETE from " + DogTrainingDatabase.USER_TABLE)
     void deleteAll();
