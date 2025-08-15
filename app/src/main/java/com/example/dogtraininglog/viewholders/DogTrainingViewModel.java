@@ -30,7 +30,7 @@ public class DogTrainingViewModel extends AndroidViewModel {
         return repository.getAllLogsLive();
     }
 
-    /*Add tot e*/
+    /*Insert*/
     public void insert(DogLog log){
         repository.insertDogLog(log);
     }
