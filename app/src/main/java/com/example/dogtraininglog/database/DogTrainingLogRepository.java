@@ -14,6 +14,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+/*This class creates an API to access data. It also centralizes threading so writes
+* go on a background thread. Viewmodel depends on this.*/
 public class DogTrainingLogRepository {
 
     private final DogTrainingLogDAO dogTrainingLogDAO;
@@ -23,6 +25,7 @@ public class DogTrainingLogRepository {
 
     private static DogTrainingLogRepository repository;
 
+    /*Get singleton room database instance, then get the DAO*/
     private DogTrainingLogRepository(Application application){
         DogTrainingDatabase db = DogTrainingDatabase.getDatabase(application);
         this.dogTrainingLogDAO = db.dogTrainingLogDAO();
@@ -50,6 +53,7 @@ public class DogTrainingLogRepository {
         }
         return null;
     }
+
 
     public ArrayList<DogLog> getAllLogs() {
         Future<ArrayList<DogLog>> future = DogTrainingDatabase.databaseWriteExecutor.submit(
