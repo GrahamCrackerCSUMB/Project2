@@ -73,7 +73,7 @@ public class DogTrainingLogRepository {
         return null;
     }
 
-    public void insertGymLog(DogLog dogTrainingLog) {
+    public void insertDogLog(DogLog dogTrainingLog) {
         DogTrainingDatabase.databaseWriteExecutor.execute(() ->
         {
             dogTrainingLogDAO.insert(dogTrainingLog);
