@@ -5,20 +5,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import androidx.lifecycle.Observer;
 
 
 import androidx.appcompat.app.AppCompatActivity;
 
+
 import com.example.dogtraininglog.database.DogRepository;
-import com.example.dogtraininglog.database.DogTrainingLogRepository;
-import com.example.dogtraininglog.database.ViewLogsActivity;
+import com.example.dogtraininglog.database.UserRepository;
 import com.example.dogtraininglog.database.entities.Dog;
-import com.example.dogtraininglog.database.entities.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +55,18 @@ public class SelectDogActivity extends AppCompatActivity{
         tvWelcome   = findViewById(R.id.tvUserName);
 
         dogRepo = new DogRepository(getApplication());
+        UserRepository userRepo = UserRepository.getRepository(getApplication());
+
+        userRepo.getUserByIdLive(userId).observe(this, u -> {
+            if (u != null) {
+                String name = u.getUsername();
+                if (name != null && !name.isEmpty()) {
+                    name = Character.toUpperCase(name.charAt(0)) + name.substring(1);
+                }
+                tvWelcome.setText(name);
+            }
+        });
+
 
         // Setup spinner adapter
         spinnerAdapter = new ArrayAdapter<>(
@@ -97,10 +107,10 @@ public class SelectDogActivity extends AppCompatActivity{
 
             int dogId = currentDogs.get(pos).getId();
 
-            Intent logsIntent = new Intent(this, ViewLogsActivity.class);
-            logsIntent.putExtra(EXTRA_USER_ID, userId);
-            logsIntent.putExtra(EXTRA_DOG_ID, dogId);
-            startActivity(logsIntent);
+            Intent next = new Intent(this, MainActivity.class);
+            next.putExtra(EXTRA_USER_ID, userId);
+            next.putExtra(EXTRA_DOG_ID,  dogId);
+            startActivity(next);
         });
     }
 

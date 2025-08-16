@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -25,6 +26,7 @@ public class DogLog {
     private int userId;
 
     /*Constructor*/
+
 
     public DogLog(String activity, int reps, boolean successful, int userId) {
         this.activity = activity;
@@ -55,6 +57,13 @@ public class DogLog {
                 Objects.equals(id, dogLog.id) && Objects.equals(activity, dogLog.activity)
                 && Objects.equals(date, dogLog.date);
     }
+
+    @androidx.room.ColumnInfo(name = "dogId", index = true)
+    private int dogId;
+
+    public int getDogId() { return dogId; }
+    public void setDogId(int dogId) { this.dogId = dogId; }
+
 
     @Override
     public int hashCode() {

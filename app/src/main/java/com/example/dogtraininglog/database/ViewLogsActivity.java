@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import java.util.ArrayList;
 
+import com.example.dogtraininglog.SelectDogActivity;
 import com.example.dogtraininglog.viewholders.DogLogAdapter;
 
 
@@ -20,6 +21,7 @@ import java.util.List;
 
 public class ViewLogsActivity extends AppCompatActivity {
 
+
     /*RecylcerView to display the logs in a scrolling list*/
     private RecyclerView recyclerView;
 
@@ -31,9 +33,16 @@ public class ViewLogsActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        int userId = getIntent().getIntExtra(SelectDogActivity.EXTRA_USER_ID, -1);
+        int dogId  = getIntent().getIntExtra(SelectDogActivity.EXTRA_DOG_ID,  -1);
+        if (userId <= 0 || dogId <= 0) {
+            finish(); return;
+        }
+
         /*Inflate recycler view*/
         ActivityViewLogsBinding binding = ActivityViewLogsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
         recyclerView = binding.logsRecyclerView;
         /*Use the layout manager for recylcer view*/
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -48,14 +57,9 @@ public class ViewLogsActivity extends AppCompatActivity {
             adapter.updateList(allLogs);
         });
 
-        binding.searchEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filterLogs(s.toString());
-            }
-
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void afterTextChanged(Editable s) {}
+        repo.getLogsForDog(userId, dogId).observe(this, logs -> {
+            allLogs = (logs != null) ? logs : new ArrayList<>();
+            adapter.updateList(allLogs);
         });
     }
 
