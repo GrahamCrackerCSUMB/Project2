@@ -1,5 +1,6 @@
 package com.example.dogtraininglog;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +25,9 @@ public class RegisterActivity extends AppCompatActivity {
         /*Inflate layout so you can see registration screen*/
         setContentView(R.layout.activity_register);
 
+        Button back = findViewById(R.id.btnBackToLogin);
+        back.setOnClickListener(v -> finish());
+
         /*Bind views*/
         usernameEt = findViewById(R.id.registerUsername);
         passwordEt = findViewById(R.id.registerPassword);
@@ -33,6 +37,13 @@ public class RegisterActivity extends AppCompatActivity {
 
         /*When you click button, attempt to create a new user*/
         createBtn.setOnClickListener(v -> attemptCreate());
+
+        back.setOnClickListener(v -> {
+            Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(i);
+            finish();
+        });
     }
 
     private void attemptCreate() {
