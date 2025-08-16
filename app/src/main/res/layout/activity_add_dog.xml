@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity">
+
+    <EditText
+        android:id="@+id/etDogName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Dog name"
+        android:inputType="textPersonName"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <EditText
+        android:id="@+id/etDogAge"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Age (years)"
+        android:inputType="number"
+        app:layout_constraintTop_toBottomOf="@id/etDogName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp"/>
+
+    <EditText
+        android:id="@+id/etDogOwner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Owner"
+        android:inputType="textPersonName"
+        app:layout_constraintTop_toBottomOf="@id/etDogAge"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp"/>
+
+    <EditText
+        android:id="@+id/etDogNotes"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:hint="Notes"
+        android:inputType="textMultiLine"
+        android:minLines="3"
+        android:maxLines="6"
+        android:gravity="top|start"
+        app:layout_constraintTop_toBottomOf="@id/etDogOwner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btnSaveDog"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="20dp"/>
+
+    <Button
+        android:id="@+id/btnSaveDog"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
