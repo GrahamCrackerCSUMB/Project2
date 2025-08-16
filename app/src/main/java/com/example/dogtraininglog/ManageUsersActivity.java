@@ -1,8 +1,11 @@
 package com.example.dogtraininglog;
 
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,29 +14,70 @@ import com.example.dogtraininglog.database.DogTrainingDatabase;
 import com.example.dogtraininglog.database.UserDAO;
 import com.example.dogtraininglog.database.entities.User;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ManageUsersActivity extends AppCompatActivity {
+
     private UserDAO userDao;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_users);
 
-        ListView listView = findViewById(R.id.userListView);
+        listView = findViewById(R.id.userListView);
         userDao = DogTrainingDatabase.getDatabase(getApplicationContext()).userDAO();
 
-        userDao.getAllUsers().observe(this, users -> { // DAO API exists.
-            ArrayAdapter<User> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, users);
+        // Observe users and render a filtered list (hide the seed admin account)
+        userDao.getAllUsers().observe(this, users -> {
+            // 1) Build filtered list (hide "admin1")
+            List<User> filtered = new ArrayList<>();
+            for (User u : users) {
+                if (!"admin1".equalsIgnoreCase(u.getUsername())) {
+                    filtered.add(u);
+                }
+            }
+
+            // 2) Adapter that shows username and role
+            ArrayAdapter<User> adapter = new ArrayAdapter<User>(
+                    this,
+                    android.R.layout.simple_list_item_1,
+                    filtered
+            ) {
+                @Override
+                public View getView(int position, View convertView, ViewGroup parent) {
+                    View v = super.getView(position, convertView, parent);
+                    TextView tv = v.findViewById(android.R.id.text1);
+                    User u = getItem(position);
+                    if (u != null) {
+                        tv.setText(u.getUsername() + (u.isAdmin() ? " (Admin)" : ""));
+                    }
+                    return v;
+                }
+            };
+
             listView.setAdapter(adapter);
 
+            // 3) Toggle admin status on tap
             listView.setOnItemClickListener((parent, view, position, id) -> {
-                User selected = users.get(position);
-                if (!selected.isAdmin()) {
-                    selected.setAdmin(true);
-                    com.example.dogtraininglog.database.DogTrainingDatabase.databaseWriteExecutor.execute(() -> userDao.insert(selected));
-                    Toast.makeText(this, selected.getUsername() + " is now an admin!", Toast.LENGTH_SHORT).show();
+                User selected = filtered.get(position);
+
+                if (selected.isAdmin()) {
+                    // Demote
+                    selected.setAdmin(false);
+                    DogTrainingDatabase.databaseWriteExecutor.execute(() -> userDao.insert(selected));
+                    Toast.makeText(this,
+                            selected.getUsername() + " is no longer an admin.",
+                            Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(this, selected.getUsername() + " is already an admin", Toast.LENGTH_SHORT).show();
+                    // Promote
+                    selected.setAdmin(true);
+                    DogTrainingDatabase.databaseWriteExecutor.execute(() -> userDao.insert(selected));
+                    Toast.makeText(this,
+                            selected.getUsername() + " is now an admin!",
+                            Toast.LENGTH_SHORT).show();
                 }
             });
         });
