@@ -19,8 +19,11 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.activity.OnBackPressedCallback; // <-- add at top with other imports
 
 
+import com.example.dogtraininglog.database.DogRepository;
+import com.example.dogtraininglog.database.entities.Dog;
 import com.example.dogtraininglog.database.DogTrainingLogRepository;
 import com.example.dogtraininglog.database.DogLog;
 import com.example.dogtraininglog.database.entities.User;
@@ -64,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
     boolean mSuccessful = false;
 
     private int loggedInUserId = -1;
+    private int dogId = -1;
+    private String selectedDogName = null;
     private User user;
 
     private final ArrayList<DogLog> currentLogs = new ArrayList<>();
@@ -74,12 +79,43 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
+        dogId   = getIntent().getIntExtra(SelectDogActivity.EXTRA_DOG_ID, -1);
+        selectedDogName = getIntent().getStringExtra(SelectDogActivity.EXTRA_DOG_NAME);
+        applyDogHeader();
+
+        dogId = getIntent().getIntExtra(SelectDogActivity.EXTRA_DOG_ID, -1);
+
+
+        dogId = getIntent().getIntExtra(SelectDogActivity.EXTRA_DOG_ID, -1);
 
         dogTrainingViewModel = new ViewModelProvider(this).get(DogTrainingViewModel.class);
+
+        DogRepository dogRepo = new DogRepository(getApplication());
+
+        if (dogId > 0) {
+            dogRepo.getDogByIdLive(dogId).observe(this, (Dog dog) -> {
+                if (dog != null) {
+                    binding.tvUserNameTop.setText(dog.getName().toUpperCase(java.util.Locale.ROOT));
+                }
+            });
+        } else {
+            binding.tvUserNameTop.setText("");
+        }
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Intent i = new Intent(MainActivity.this, SelectDogActivity.class);
+                i.putExtra(SelectDogActivity.EXTRA_USER_ID, loggedInUserId);
+                startActivity(i);
+                finish();
+            }
+        });
 
         /*Wire up recycler view - this displays the training logs*/
         RecyclerView recyclerView = binding.logDisplayRecyclerView;
@@ -108,9 +144,40 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        /*Go back to previous screen*/
+        binding.btnBack.setOnClickListener(v -> {
+            finish();
+        });
+
     }
 
-    private void loginUser(Bundle savedInstanceState) {
+    private void applyDogHeader() {
+        if (binding != null && binding.tvUserNameTop != null) {
+            if (selectedDogName != null && !selectedDogName.isEmpty()) {
+                binding.tvUserNameTop.setText(selectedDogName.toUpperCase(java.util.Locale.ROOT));
+            } else {
+                binding.tvUserNameTop.setText("");
+            }
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        dogId   = intent.getIntExtra(SelectDogActivity.EXTRA_DOG_ID, -1);
+        selectedDogName = intent.getStringExtra(SelectDogActivity.EXTRA_DOG_NAME);
+        applyDogHeader();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        applyDogHeader();
+    }
+
+        private void loginUser(Bundle savedInstanceState) {
         final int LOGGED_OUT = -1;
 
         /*Persistance - if you are logged in you stay logged in*/
@@ -143,7 +210,6 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.user = u;
                 if (u == null) return;
 
-                binding.tvUserNameTop.setText(u.getUsername() == null ? "" : u.getUsername());
 
                 /*Display who the trainer is*/
                 if (getSupportActionBar() != null) {
@@ -168,20 +234,20 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             });
                 } else {
-                    if (getSupportActionBar() != null) {
-                        getSupportActionBar().setSubtitle(null);
-                    }
 
-                    dogTrainingViewModel.getAllLogsById(loggedInUserId).observe(MainActivity.this,
-                            new Observer<List<DogLog>>() {
-                                @Override public void onChanged(List<DogLog> logList) {
-                                    currentLogs.clear();
-                                    if (logList != null) currentLogs.addAll(logList);
-                                    DogTrainingLogAdapter adapter =
-                                            (DogTrainingLogAdapter) binding.logDisplayRecyclerView.getAdapter();
-                                    if (adapter != null) adapter.submitList(new ArrayList<>(currentLogs));
-                                }
-                            });
+                    final int dogId = getIntent().getIntExtra(SelectDogActivity.EXTRA_DOG_ID, -1);
+
+                    LiveData<List<DogLog>> stream = (dogId > 0)
+                            ? repository.getLogsForDog(loggedInUserId, dogId)
+                            : dogTrainingViewModel.getAllLogsById(loggedInUserId);
+
+                    stream.observe(MainActivity.this, logList -> {
+                        currentLogs.clear();
+                        if (logList != null) currentLogs.addAll(logList);
+                        DogTrainingLogAdapter adapter =
+                                (DogTrainingLogAdapter) binding.logDisplayRecyclerView.getAdapter();
+                        if (adapter != null) adapter.submitList(new ArrayList<>(currentLogs));
+                    });
                 }
 
                 invalidateOptionsMenu();
@@ -282,10 +348,13 @@ public class MainActivity extends AppCompatActivity {
 
     /*Inserts DogLog data*/
     private void insertDogLogRecord(){
-        if (mActivity.isEmpty()){
+        if (mActivity.isEmpty()) return;
+        if (dogId <= 0) {
+            android.widget.Toast.makeText(this, "No dog selected.", android.widget.Toast.LENGTH_SHORT).show();
             return;
         }
-        DogLog log = new DogLog(mActivity, mReps, mSuccessful,loggedInUserId);
+
+        DogLog log = new DogLog(mActivity, mReps, mSuccessful, loggedInUserId, dogId);
         repository.insertDogLog(log);
     }
 
@@ -302,6 +371,16 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        updateSharedPreference();
+
+        Intent sel = SelectDogActivity.selectDogIntentFactory(this, loggedInUserId);
+        sel.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(sel);
+        finish();
     }
 
     /*Reads UI field to help construct doglog*/

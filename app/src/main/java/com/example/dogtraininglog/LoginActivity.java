@@ -25,10 +25,13 @@ public class LoginActivity extends AppCompatActivity {
     public static final String EXTRA_USERNAME = "com.example.dogtraininglog.extra.USERNAME";
 
 
+
+
     /*Sets up view, listners, and inital state here.*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         /*Inflate the XML*/
         binding = ActivityLoginBinding.inflate(getLayoutInflater());

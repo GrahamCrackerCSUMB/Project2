@@ -79,6 +79,9 @@ public class DogRepository {
     public void delete(Dog dog) {
         DogTrainingDatabase.databaseWriteExecutor.execute(() -> dogDAO.delete(dog));
     }
+    public LiveData<com.example.dogtraininglog.database.entities.Dog> getDogByIdLive(int dogId) {
+        return dogDAO.getDogByIdLive(dogId);
+    }
 
 
 }
