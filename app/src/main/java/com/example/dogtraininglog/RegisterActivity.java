@@ -46,7 +46,7 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        /*Stop button temporaily so we don't accidentally create dupliates*/
+        /*Stop button temporaily so we don't accidentally create duplicates*/
         createBtn.setEnabled(false);
 
         new Thread(() -> {
