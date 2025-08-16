@@ -1,9 +1,11 @@
 package com.example.dogtraininglog;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,6 +61,23 @@ public class ManageUsersActivity extends AppCompatActivity {
             };
 
             listView.setAdapter(adapter);
+
+            Button backBtn = findViewById(R.id.btnBack);
+            backBtn.setOnClickListener(v -> finish());
+
+            Button logoutBtn = findViewById(R.id.btnLogout);
+            logoutBtn.setOnClickListener(v -> {
+                // Clear login state
+                getSharedPreferences(getString(R.string.preference_file_key), MODE_PRIVATE)
+                        .edit()
+                        .remove(getString(R.string.preference_userId_key))
+                        .apply();
+
+                // Go back to login screen
+                Intent intent = new Intent(ManageUsersActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            });
 
             // 3) Toggle admin status on tap
             listView.setOnItemClickListener((parent, view, position, id) -> {
