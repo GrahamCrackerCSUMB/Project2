@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
         /*Add user name to top*/
-        item.setTitle(user.getUsername());
+        item.setTitle("LOG OUT");
 
         /*Log out when clicked*/
         item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {

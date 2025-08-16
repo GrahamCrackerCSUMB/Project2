@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.lifecycle.Observer;
 
@@ -26,10 +27,14 @@ public class SelectDogActivity extends AppCompatActivity{
     public static final String EXTRA_USER_ID = "com.example.dogtraininglog.extra.USER_ID";
     public static final String EXTRA_DOG_ID  = "com.example.dogtraininglog.extra.DOG_ID";
 
+
+    private static final String PREFS = "app_prefs";
+    private static final String KEY_LOGGED_IN_USER_ID = "LOGGED_IN_USER_ID";
+
     private int userId;
 
     private Spinner spinnerDogs;
-    private Button btnAddDog, btnContinue;
+    private Button btnAddDog, btnContinue, btnLogout;
     private TextView tvWelcome;
 
     private DogRepository dogRepo;
@@ -40,6 +45,23 @@ public class SelectDogActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_dog);
+
+        Button btnLogout = findViewById(R.id.btnLogout);
+        if (btnLogout != null) {
+            btnLogout.setOnClickListener(v -> {
+                getSharedPreferences(PREFS, MODE_PRIVATE)
+                        .edit()
+                        .remove(KEY_LOGGED_IN_USER_ID)
+                        .apply();
+
+                Intent i = new Intent(SelectDogActivity.this, LoginActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(i);
+            });
+        } else {
+            android.util.Log.e("SelectDogActivity",
+                    "btnLogout is null — is activity_select_dog.xml the layout you set?");
+        }
 
         /*Check to see if we have a vla*/
         userId = getIntent().getIntExtra(EXTRA_USER_ID, -1);
@@ -101,10 +123,16 @@ public class SelectDogActivity extends AppCompatActivity{
 
         /*When they click continue go to see training, new activity*/
         btnContinue.setOnClickListener(v -> {
-            if (currentDogs.isEmpty()) return;
-            int pos = spinnerDogs.getSelectedItemPosition();
-            if (pos < 0 || pos >= currentDogs.size()) return;
+            if (currentDogs.isEmpty()) {
+                Toast.makeText(
+                        SelectDogActivity.this,
+                        "Select a dog or add one.",
+                        Toast.LENGTH_LONG
+                ).show();
+                return;
+            }
 
+            int pos = spinnerDogs.getSelectedItemPosition();
             int dogId = currentDogs.get(pos).getId();
 
             Intent next = new Intent(this, MainActivity.class);
@@ -112,7 +140,10 @@ public class SelectDogActivity extends AppCompatActivity{
             next.putExtra(EXTRA_DOG_ID,  dogId);
             startActivity(next);
         });
+
+
     }
+
 
     /* Intent factory */
     public static Intent selectDogIntentFactory(Context context, int userId) {
