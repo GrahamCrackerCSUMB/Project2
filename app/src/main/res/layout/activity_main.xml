@@ -8,18 +8,21 @@
     tools:context=".MainActivity">
 
     <!-- Logs list at the very top -->
+
+    <!-- Username directly under the list -->
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/logDisplayRecyclerView"
-        android:layout_width="0dp"
-        android:layout_height="300dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="412dp"
+        android:layout_height="263dp"
+        android:layout_marginTop="56dp"
         android:padding="2dp"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/doglog_recycler_item" />
 
-    <!-- Username directly under the list -->
     <TextView
         android:id="@+id/tvUserNameTop"
         android:layout_width="wrap_content"
