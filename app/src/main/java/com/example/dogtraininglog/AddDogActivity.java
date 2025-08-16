@@ -35,6 +35,13 @@ public class AddDogActivity extends AppCompatActivity{
             throw new IllegalStateException("activity_add_dog.xml must expose etDogName, etDogAge, etDogOwner, etDogNotes, btnSaveDog");
         }
 
+        Button backButton = findViewById(R.id.btnBack);
+        backButton.setOnClickListener(v -> {
+            Intent intent = new Intent(AddDogActivity.this, SelectDogActivity.class);
+            startActivity(intent);
+            finish();
+        });
+
         btnSave.setOnClickListener(v -> {
             String name   = etDogName.getText().toString().trim();
             String ageStr = etDogAge.getText().toString().trim();
