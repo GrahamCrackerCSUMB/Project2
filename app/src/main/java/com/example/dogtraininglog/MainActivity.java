@@ -215,37 +215,35 @@ public class MainActivity extends AppCompatActivity {
 
 
                 /*If admin display admin view*/
-                if (u.isAdmin()) {
-                    if (getSupportActionBar() != null) {
+
+                final int selectedDogId = getIntent().getIntExtra(SelectDogActivity.EXTRA_DOG_ID, -1);
+
+
+                if (getSupportActionBar() != null) {
+                    if (u.isAdmin() && selectedDogId <= 0) {
                         getSupportActionBar().setSubtitle("ADMIN VIEW");
+                    } else {
+                        getSupportActionBar().setSubtitle(u.getUsername().toUpperCase(java.util.Locale.ROOT));
                     }
-
-                    dogTrainingViewModel.getAllLogs().observe(MainActivity.this,
-                            new Observer<List<DogLog>>() {
-                                @Override public void onChanged(List<DogLog> logList) {
-                                    currentLogs.clear();
-                                    if (logList != null) currentLogs.addAll(logList);
-                                    DogTrainingLogAdapter adapter =
-                                            (DogTrainingLogAdapter) binding.logDisplayRecyclerView.getAdapter();
-                                    if (adapter != null) adapter.submitList(new ArrayList<>(currentLogs));
-                                }
-                            });
-                } else {
-
-                    final int dogId = getIntent().getIntExtra(SelectDogActivity.EXTRA_DOG_ID, -1);
-
-                    LiveData<List<DogLog>> stream = (dogId > 0)
-                            ? repository.getLogsForDog(loggedInUserId, dogId)
-                            : dogTrainingViewModel.getAllLogsById(loggedInUserId);
-
-                    stream.observe(MainActivity.this, logList -> {
-                        currentLogs.clear();
-                        if (logList != null) currentLogs.addAll(logList);
-                        DogTrainingLogAdapter adapter =
-                                (DogTrainingLogAdapter) binding.logDisplayRecyclerView.getAdapter();
-                        if (adapter != null) adapter.submitList(new ArrayList<>(currentLogs));
-                    });
                 }
+
+                androidx.lifecycle.LiveData<java.util.List<com.example.dogtraininglog.database.DogLog>> stream;
+
+                if (selectedDogId > 0) {
+                    stream = repository.getLogsForDog(loggedInUserId, selectedDogId);
+                } else if (u.isAdmin()) {
+                    stream = dogTrainingViewModel.getAllLogs();
+                } else {
+                    stream = dogTrainingViewModel.getAllLogsById(loggedInUserId);
+                }
+
+                stream.observe(MainActivity.this, logList -> {
+                    currentLogs.clear();
+                    if (logList != null) currentLogs.addAll(logList);
+                    DogTrainingLogAdapter adapter =
+                            (DogTrainingLogAdapter) binding.logDisplayRecyclerView.getAdapter();
+                    if (adapter != null) adapter.submitList(new java.util.ArrayList<>(currentLogs));
+                });
 
                 invalidateOptionsMenu();
             }
@@ -317,13 +315,15 @@ public class MainActivity extends AppCompatActivity {
 
     /*Log out and clear task*/
     private void logout() {
-
         loggedInUserId = -1;
 
-        updateSharedPreference();
+        getSharedPreferences(getString(R.string.preference_file_key), MODE_PRIVATE)
+                .edit()
+                .remove(getString(R.string.preference_userId_key))  // or .putInt(..., -1)
+                .apply();
 
         startActivity(LoginActivity.makeIntent(MainActivity.this));
-        finish();
+        finishAffinity();
     }
 
     /*Logged in user id to shared preferences for persistance purposes.*/
@@ -361,8 +361,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.logoutMenuItem) {
-            startActivity(LoginActivity.makeIntent(MainActivity.this));
-            finish();
+            logout();
             return true;
         }
         return super.onOptionsItemSelected(item);
