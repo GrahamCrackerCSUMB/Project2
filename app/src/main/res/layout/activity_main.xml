@@ -110,7 +110,7 @@
         android:layout_marginTop="16dp"
         android:text="BACK"
         android:textAllCaps="true"
-        android:textSize="24sp"
+        android:textSize="36sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/successCheckbox"
         app:layout_constraintEnd_toStartOf="@id/logButton" />
