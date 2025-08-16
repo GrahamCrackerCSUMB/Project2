@@ -24,9 +24,27 @@ public class AdminActivity extends AppCompatActivity {
             startActivity(i);
         });
 
+        Button backBtn = findViewById(R.id.btnBack);
+        backBtn.setOnClickListener(v -> finish());
+
+        Button logoutBtn = findViewById(R.id.btnLogout);
+        logoutBtn.setOnClickListener(v -> {
+            // Clear login state if stored in SharedPreferences
+            getSharedPreferences("app_prefs", MODE_PRIVATE)
+                    .edit()
+                    .remove("loggedInUserId")
+                    .apply();
+
+            // Go back to login screen
+            Intent intent = new Intent(AdminActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        });
+
         btnManageUsers.setOnClickListener(v -> {
             Intent i = new Intent(this, ManageUsersActivity.class);
             startActivity(i);
+
         });
     }
 }
