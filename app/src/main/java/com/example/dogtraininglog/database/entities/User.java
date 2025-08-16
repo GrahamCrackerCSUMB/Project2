@@ -77,4 +77,9 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    @Override
+    public String toString() {
+        return username;  // or include more info like: return username + (isAdmin ? " (Admin)" : "");
+    }
 }
