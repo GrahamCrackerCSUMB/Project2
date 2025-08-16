@@ -27,8 +27,13 @@ public class AddDogActivity extends AppCompatActivity{
 
         etDogName  = findViewById(R.id.etDogName);
         etDogAge   = findViewById(R.id.etDogAge);
+        etDogNotes = findViewById(R.id.etDogNotes);
         etDogOwner = findViewById(R.id.etDogOwner);
         btnSave    = findViewById(R.id.btnSaveDog);
+
+        if (etDogName == null || etDogAge == null || etDogOwner == null || etDogNotes == null || btnSave == null) {
+            throw new IllegalStateException("activity_add_dog.xml must expose etDogName, etDogAge, etDogOwner, etDogNotes, btnSaveDog");
+        }
 
         btnSave.setOnClickListener(v -> {
             String name   = etDogName.getText().toString().trim();
@@ -40,24 +45,22 @@ public class AddDogActivity extends AppCompatActivity{
                 return;
             }
 
-            Integer age = null;
+            int age = 0;
             if (!ageStr.isEmpty()) {
-                try {
-                    age = Integer.parseInt(ageStr);
-                } catch (NumberFormatException e) {
-                    etDogAge.setError("Enter a number");
-                    return;
-                }
+                try { age = Integer.parseInt(ageStr); }
+                catch (NumberFormatException e) { etDogAge.setError("Enter a number"); return; }
             }
 
             Dog d = new Dog();
             d.setUserId(userId);
             d.setName(name);
-            if (age != null) d.setAge(age);
+            d.setAge(age);
             if (!owner.isEmpty()) d.setOwner(owner);
-            if (!notes.isEmpty()) d.setNotes(notes);   // <- set notes if provided
+            if (!notes.isEmpty()) d.setNotes(notes);
 
+            android.util.Log.d("DogRepo", "Attempt insert userId=" + userId + " name=" + name + " age=" + age);
             repo.insert(d);
+
             setResult(RESULT_OK, new Intent());
             finish();
         });

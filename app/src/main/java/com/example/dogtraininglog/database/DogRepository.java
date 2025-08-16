@@ -51,8 +51,23 @@ public class DogRepository {
     }
 
     /*Add a dog*/
+   // public void insert(Dog dog) {
+    //    DogTrainingDatabase.databaseWriteExecutor.execute(() -> dogDAO.insert(dog));
+    //}
+
     public void insert(Dog dog) {
-        DogTrainingDatabase.databaseWriteExecutor.execute(() -> dogDAO.insert(dog));
+        DogTrainingDatabase.databaseWriteExecutor.execute(() -> {
+            try {
+                long id = dogDAO.insert(dog);
+                android.util.Log.d("DogRepo",
+                        "Inserted Dog rowId=" + id +
+                                " userId=" + dog.getUserId() +
+                                " name=" + dog.getName() +
+                                " age=" + dog.getAge());
+            } catch (Exception e) {
+                android.util.Log.e("DogRepo", "Insert dog FAILED", e);
+            }
+        });
     }
 
     /*Update a dog*/
