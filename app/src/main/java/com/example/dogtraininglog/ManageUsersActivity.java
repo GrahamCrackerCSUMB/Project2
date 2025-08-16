@@ -23,30 +23,49 @@ public class ManageUsersActivity extends AppCompatActivity {
 
     private UserDAO userDao;
     private ListView listView;
+    private int currentUserId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_users);
 
+        // who is logged in?
+        currentUserId = getSharedPreferences(getString(R.string.preference_file_key), MODE_PRIVATE)
+                .getInt(getString(R.string.preference_userId_key), -1);
+
         listView = findViewById(R.id.userListView);
         userDao = DogTrainingDatabase.getDatabase(getApplicationContext()).userDAO();
 
-        // Observe users and render a filtered list (hide the seed admin account)
+        // Bottom buttons (if present)
+        Button backBtn = findViewById(R.id.btnBack);
+        if (backBtn != null) backBtn.setOnClickListener(v -> finish());
+
+        Button logoutBtn = findViewById(R.id.btnLogout);
+        if (logoutBtn != null) {
+            logoutBtn.setOnClickListener(v -> {
+                getSharedPreferences(getString(R.string.preference_file_key), MODE_PRIVATE)
+                        .edit()
+                        .remove(getString(R.string.preference_userId_key))
+                        .apply();
+                Intent i = new Intent(ManageUsersActivity.this, LoginActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(i);
+                finish();
+            });
+        }
+
+        // Observe users; hide admin1 and current user
         userDao.getAllUsers().observe(this, users -> {
-            // 1) Build filtered list (hide "admin1")
-            List<User> filtered = new ArrayList<>();
+            List<User> display = new ArrayList<>();
             for (User u : users) {
-                if (!"admin1".equalsIgnoreCase(u.getUsername())) {
-                    filtered.add(u);
-                }
+                if ("admin1".equalsIgnoreCase(u.getUsername())) continue; // hide seed admin
+                if (u.getId() == currentUserId) continue;                  // hide yourself
+                display.add(u);
             }
 
-            // 2) Adapter that shows username and role
             ArrayAdapter<User> adapter = new ArrayAdapter<User>(
-                    this,
-                    android.R.layout.simple_list_item_1,
-                    filtered
+                    this, android.R.layout.simple_list_item_1, display
             ) {
                 @Override
                 public View getView(int position, View convertView, ViewGroup parent) {
@@ -59,45 +78,18 @@ public class ManageUsersActivity extends AppCompatActivity {
                     return v;
                 }
             };
-
             listView.setAdapter(adapter);
 
-            Button backBtn = findViewById(R.id.btnBack);
-            backBtn.setOnClickListener(v -> finish());
-
-            Button logoutBtn = findViewById(R.id.btnLogout);
-            logoutBtn.setOnClickListener(v -> {
-                // Clear login state
-                getSharedPreferences(getString(R.string.preference_file_key), MODE_PRIVATE)
-                        .edit()
-                        .remove(getString(R.string.preference_userId_key))
-                        .apply();
-
-                // Go back to login screen
-                Intent intent = new Intent(ManageUsersActivity.this, LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            });
-
-            // 3) Toggle admin status on tap
             listView.setOnItemClickListener((parent, view, position, id) -> {
-                User selected = filtered.get(position);
-
-                if (selected.isAdmin()) {
-                    // Demote
-                    selected.setAdmin(false);
-                    DogTrainingDatabase.databaseWriteExecutor.execute(() -> userDao.insert(selected));
-                    Toast.makeText(this,
-                            selected.getUsername() + " is no longer an admin.",
-                            Toast.LENGTH_SHORT).show();
-                } else {
-                    // Promote
-                    selected.setAdmin(true);
-                    DogTrainingDatabase.databaseWriteExecutor.execute(() -> userDao.insert(selected));
-                    Toast.makeText(this,
-                            selected.getUsername() + " is now an admin!",
-                            Toast.LENGTH_SHORT).show();
-                }
+                User selected = display.get(position);
+                // toggle admin for other users
+                selected.setAdmin(!selected.isAdmin());
+                DogTrainingDatabase.databaseWriteExecutor.execute(() -> userDao.insert(selected));
+                Toast.makeText(
+                        this,
+                        selected.getUsername() + (selected.isAdmin() ? " is now an admin!" : " is no longer an admin."),
+                        Toast.LENGTH_SHORT
+                ).show();
             });
         });
     }
