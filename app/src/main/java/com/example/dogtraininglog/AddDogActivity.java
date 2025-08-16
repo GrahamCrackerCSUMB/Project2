@@ -1,5 +1,6 @@
 package com.example.dogtraininglog;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -10,6 +11,8 @@ import com.example.dogtraininglog.database.DogRepository;
 import com.example.dogtraininglog.database.entities.Dog;
 
 public class AddDogActivity extends AppCompatActivity{
+
+    private static final String EXTRA_USER_ID = "com.example.dogtraininglog.adddog.USER_ID";
     private int userId;
     private EditText etDogName, etDogAge, etDogOwner, etDogNotes;
     private Button btnSave;
@@ -20,33 +23,41 @@ public class AddDogActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_dog);
 
-        userId = getIntent().getIntExtra(SelectDogActivity.EXTRA_USER_ID, -1);
+        userId = readUserId(getIntent());
+
+        /*If we don't get something quit.*/
         if (userId <= 0) { finish(); return; }
 
         repo = new DogRepository(getApplication());
 
+        /*Fields*/
         etDogName  = findViewById(R.id.etDogName);
         etDogAge   = findViewById(R.id.etDogAge);
         etDogNotes = findViewById(R.id.etDogNotes);
         etDogOwner = findViewById(R.id.etDogOwner);
         btnSave    = findViewById(R.id.btnSaveDog);
 
+        /*Troublshooting*/
         if (etDogName == null || etDogAge == null || etDogOwner == null || etDogNotes == null || btnSave == null) {
-            throw new IllegalStateException("activity_add_dog.xml must expose etDogName, etDogAge, etDogOwner, etDogNotes, btnSaveDog");
+            throw new IllegalStateException("One of the add dogs fields is null");
         }
 
+        /*Back button*/
         Button backButton = findViewById(R.id.btnBack);
-        backButton.setOnClickListener(v -> {
-            Intent intent = new Intent(AddDogActivity.this, SelectDogActivity.class);
-            startActivity(intent);
-            finish();
-        });
+        if (backButton != null) {
+            backButton.setOnClickListener(v -> {
+                startActivity(SelectDogActivity.makeIntent(AddDogActivity.this, userId));
+                finish();
+            });
+        }
 
+        /*Save button*/
         btnSave.setOnClickListener(v -> {
             String name   = etDogName.getText().toString().trim();
             String ageStr = etDogAge.getText().toString().trim();
             String owner  = etDogOwner.getText().toString().trim();
             String notes  = etDogNotes.getText().toString().trim();
+
             if (name.isEmpty()) {
                 etDogName.setError("Required");
                 return;
@@ -65,11 +76,24 @@ public class AddDogActivity extends AppCompatActivity{
             if (!owner.isEmpty()) d.setOwner(owner);
             if (!notes.isEmpty()) d.setNotes(notes);
 
+            /*Troubleshooting some more*/
             android.util.Log.d("DogRepo", "Attempt insert userId=" + userId + " name=" + name + " age=" + age);
             repo.insert(d);
 
             setResult(RESULT_OK, new Intent());
             finish();
         });
+    }
+
+    /*Intent factory*/
+    public static Intent makeIntent(Context ctx, int userId) {
+        Intent i = new Intent(ctx, AddDogActivity.class);
+        i.putExtra(EXTRA_USER_ID, userId);
+        return i;
+    }
+
+    /*Gets userid*/
+    public static int readUserId(Intent intent) {
+        return intent.getIntExtra(EXTRA_USER_ID, -1);
     }
 }
