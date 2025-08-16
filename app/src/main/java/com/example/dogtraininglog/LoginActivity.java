@@ -73,8 +73,13 @@ public class LoginActivity extends AppCompatActivity {
                   SharedPreferences sp = getSharedPreferences(getString(R.string.preference_file_key), MODE_PRIVATE);
                   sp.edit().putInt(getString(R.string.preference_userId_key), user.getId()).apply();
 
-                  /*start main activity*/
-                  startActivity(MainActivity.mainActivityIntentFactory(getApplicationContext(), user.getId()));
+
+
+                  /*start select dog activity*/
+                  startActivity(SelectDogActivity.selectDogIntentFactory(
+                          getApplicationContext(),
+                          user.getId()
+                  ));
                   finish();
                 } else {
                   /*Bad password*/
@@ -99,6 +104,13 @@ public class LoginActivity extends AppCompatActivity {
         /*Intent factory*/
         static Intent loginIntentFactory (Context context){
             return new Intent(context, LoginActivity.class);
+        }
+
+        /*Intent factory*/
+        public static Intent selectDogIntentFactory(Context context, int userId) {
+            Intent intent = new Intent(context, SelectDogActivity.class);
+            intent.putExtra(EXTRA_USER_ID, userId);
+            return intent;
         }
 
 }
