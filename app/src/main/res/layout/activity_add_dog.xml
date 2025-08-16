@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".LoginActivity">
 
     <EditText
@@ -13,6 +14,7 @@
         android:layout_height="wrap_content"
         android:hint="Dog name"
         android:inputType="textPersonName"
+        android:layout_marginTop="24dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -23,10 +25,10 @@
         android:layout_height="wrap_content"
         android:hint="Age (years)"
         android:inputType="number"
+        android:layout_marginTop="12dp"
         app:layout_constraintTop_toBottomOf="@id/etDogName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="12dp"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <EditText
         android:id="@+id/etDogOwner"
@@ -34,10 +36,10 @@
         android:layout_height="wrap_content"
         android:hint="Owner"
         android:inputType="textPersonName"
+        android:layout_marginTop="12dp"
         app:layout_constraintTop_toBottomOf="@id/etDogAge"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="12dp"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <EditText
         android:id="@+id/etDogNotes"
@@ -48,20 +50,33 @@
         android:minLines="3"
         android:maxLines="6"
         android:gravity="top|start"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="20dp"
         app:layout_constraintTop_toBottomOf="@id/etDogOwner"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnSaveDog"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="20dp"/>
+        app:layout_constraintBottom_toTopOf="@id/btnBack"/>
+
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btnSaveDog"/>
 
     <Button
         android:id="@+id/btnSaveDog"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Save"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btnBack"
         app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
