@@ -69,6 +69,10 @@ public class SelectDogActivity extends AppCompatActivity{
         btnLogout = findViewById(R.id.btnLogout);
         if (btnLogout != null) {
             btnLogout.setOnClickListener(v -> {
+                getSharedPreferences(getString(R.string.preference_file_key), MODE_PRIVATE)
+                        .edit()
+                        .remove(getString(R.string.preference_userId_key))
+                        .apply();
                 startActivity(LoginActivity.makeIntent(SelectDogActivity.this));
                 finishAffinity();
             });

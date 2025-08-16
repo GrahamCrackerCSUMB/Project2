@@ -29,16 +29,13 @@ public class AdminActivity extends AppCompatActivity {
 
         Button logoutBtn = findViewById(R.id.btnLogout);
         logoutBtn.setOnClickListener(v -> {
-            // Clear login state if stored in SharedPreferences
-            getSharedPreferences("app_prefs", MODE_PRIVATE)
+            getSharedPreferences(getString(R.string.preference_file_key), MODE_PRIVATE)
                     .edit()
-                    .remove("loggedInUserId")
+                    .remove(getString(R.string.preference_userId_key))
                     .apply();
 
-            // Go back to login screen
-            Intent intent = new Intent(AdminActivity.this, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+            startActivity(LoginActivity.makeIntent(AdminActivity.this));
+            finishAffinity();
         });
 
         btnManageUsers.setOnClickListener(v -> {
