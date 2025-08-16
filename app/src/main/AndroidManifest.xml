@@ -18,6 +18,10 @@
             android:exported="true" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MainActivity" />
+        <activity android:name=".AdminActivity" />
+        <activity android:name=".ManageUsersActivity" />
+        <activity android:name=".AdminActivity" />
+        <activity android:name=".ManageUsersActivity" />
         <activity android:name=".AddDogActivity" />
         <activity
             android:name=".SelectDogActivity"
