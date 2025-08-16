@@ -30,6 +30,7 @@ import com.example.dogtraininglog.viewholders.DogTrainingViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -141,6 +142,14 @@ public class MainActivity extends AppCompatActivity {
             @Override public void onChanged(User u) {
                 MainActivity.this.user = u;
                 if (u == null) return;
+
+                binding.tvUserNameTop.setText(u.getUsername() == null ? "" : u.getUsername());
+
+                /*Display who the trainer is*/
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().setSubtitle(u.getUsername().toUpperCase(Locale.ROOT));
+                }
+
 
                 /*If admin display admin view*/
                 if (u.isAdmin()) {
