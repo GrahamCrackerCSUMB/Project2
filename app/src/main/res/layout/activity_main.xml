@@ -7,19 +7,32 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-
+    <!-- Logs list at the very top -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/logDisplayRecyclerView"
         android:layout_width="0dp"
         android:layout_height="300dp"
         android:layout_marginTop="16dp"
         android:padding="2dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/doglog_recycler_item"
-        />
+        tools:listitem="@layout/doglog_recycler_item" />
 
+    <!-- Username directly under the list -->
+    <TextView
+        android:id="@+id/tvUserNameTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textAllCaps="true"
+        android:textSize="14sp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logDisplayRecyclerView" />
+
+    <!-- “Training” row sits under the username -->
     <TextView
         android:id="@+id/trainingLabelTextView"
         android:layout_width="100dp"
@@ -29,9 +42,7 @@
         android:text="@string/exercise"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logDisplayRecyclerView"
-
-        />
+        app:layout_constraintTop_toBottomOf="@id/tvUserNameTop" />
 
     <EditText
         android:id="@+id/trainingInputEditText"
@@ -41,19 +52,19 @@
         android:hint="@string/enter_an_exercise"
         android:inputType="textAutoComplete"
         android:padding="8dp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/trainingLabelTextView"
-        app:layout_constraintStart_toEndOf="@id/trainingLabelTextView" />
+        app:layout_constraintStart_toEndOf="@id/trainingLabelTextView"
+        app:layout_constraintBaseline_toBaselineOf="@id/trainingLabelTextView" />
 
     <TextView
         android:id="@+id/repetitionsLabelTextView"
         android:layout_width="100dp"
         android:layout_height="36dp"
-        android:layout_marginStart="16dip"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="@string/weight"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/trainingLabelTextView" />
+        app:layout_constraintTop_toBottomOf="@id/trainingLabelTextView" />
 
     <EditText
         android:id="@+id/repetitionsInputEditText"
@@ -63,19 +74,19 @@
         android:hint="@string/enter_reps"
         android:inputType="number|numberDecimal"
         android:padding="8dp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/repetitionsLabelTextView"
-        app:layout_constraintStart_toEndOf="@id/repetitionsLabelTextView" />
+        app:layout_constraintStart_toEndOf="@id/repetitionsLabelTextView"
+        app:layout_constraintBaseline_toBaselineOf="@id/repetitionsLabelTextView" />
 
     <TextView
         android:id="@+id/SuccessLabelTextView"
         android:layout_width="100dp"
         android:layout_height="36dp"
-        android:layout_marginStart="16dip"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="@string/reps"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/repetitionsLabelTextView" />
+        app:layout_constraintTop_toBottomOf="@id/repetitionsLabelTextView" />
 
     <CheckBox
         android:id="@+id/successCheckbox"
@@ -88,16 +99,33 @@
         android:maxLines="2"
         app:layout_constraintStart_toEndOf="@+id/SuccessLabelTextView"
         app:layout_constraintTop_toTopOf="@+id/SuccessLabelTextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="0dp"
+        android:layout_height="125dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="16dp"
+        android:text="BACK"
+        android:textAllCaps="true"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/successCheckbox"
+        app:layout_constraintEnd_toStartOf="@id/logButton" />
+
     <Button
         android:id="@+id/logButton"
-        android:layout_width="200dp"
+        android:layout_width="0dp"
         android:layout_height="125dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/log"
         android:textSize="36sp"
+        app:layout_constraintStart_toEndOf="@id/btnBack"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/successCheckbox" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

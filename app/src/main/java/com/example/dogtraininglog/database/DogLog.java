@@ -25,19 +25,25 @@ public class DogLog {
     private LocalDateTime date;
     private int userId;
 
+    @androidx.room.ColumnInfo(name = "dogId", index = true)
+    private int dogId;
+
     /*Constructor*/
 
 
-    public DogLog(String activity, int reps, boolean successful, int userId) {
+    public DogLog(String activity, int reps, boolean successful, int userId, int dogId) {
         this.activity = activity;
         this.reps = reps;
         this.successful = successful;
         this.userId = userId;
+        this.dogId = dogId;
         date = LocalDateTime.now();
     }
 
     /*No arguements constructor*/
     public DogLog(){}
+
+
 
     @NonNull
     @Override
@@ -58,11 +64,11 @@ public class DogLog {
                 && Objects.equals(date, dogLog.date);
     }
 
-    @androidx.room.ColumnInfo(name = "dogId", index = true)
-    private int dogId;
 
     public int getDogId() { return dogId; }
     public void setDogId(int dogId) { this.dogId = dogId; }
+
+
 
 
     @Override

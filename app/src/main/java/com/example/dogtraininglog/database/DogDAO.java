@@ -43,4 +43,8 @@ public interface DogDAO {
     /*Get all dogs - for admins*/
     @Query("SELECT * FROM dog ORDER BY name")
     LiveData<List<Dog>> getAllDogs();
+
+    @Query("SELECT * FROM dog WHERE id = :dogId LIMIT 1")
+    LiveData<com.example.dogtraininglog.database.entities.Dog> getDogByIdLive(int dogId);
+
 }

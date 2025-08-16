@@ -26,6 +26,7 @@ import java.util.List;
 public class SelectDogActivity extends AppCompatActivity{
     public static final String EXTRA_USER_ID = "com.example.dogtraininglog.extra.USER_ID";
     public static final String EXTRA_DOG_ID  = "com.example.dogtraininglog.extra.DOG_ID";
+    public static final String EXTRA_DOG_NAME = "com.example.dogtraininglog.extra.DOG_NAME";
 
 
     private static final String PREFS = "app_prefs";
@@ -46,9 +47,32 @@ public class SelectDogActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_dog);
 
-        Button btnLogout = findViewById(R.id.btnLogout);
+
+        userId = getIntent().getIntExtra(EXTRA_USER_ID, -1);
+        if (userId <= 0) {
+            int prefUserId = getSharedPreferences(getString(R.string.preference_file_key), MODE_PRIVATE)
+                    .getInt(getString(R.string.preference_userId_key), -1);
+            userId = prefUserId;
+        }
+        if (userId <= 0) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
+
+        spinnerDogs = findViewById(R.id.spinnerDogs);
+        btnAddDog   = findViewById(R.id.btnAddDog);
+        btnContinue = findViewById(R.id.btnContinue);
+        tvWelcome   = findViewById(R.id.tvUserName);
+
+
+        btnLogout = findViewById(R.id.btnLogout);
         if (btnLogout != null) {
             btnLogout.setOnClickListener(v -> {
+                getSharedPreferences(getString(R.string.preference_file_key), MODE_PRIVATE)
+                        .edit()
+                        .remove(getString(R.string.preference_userId_key))
+                        .apply();
                 getSharedPreferences(PREFS, MODE_PRIVATE)
                         .edit()
                         .remove(KEY_LOGGED_IN_USER_ID)
@@ -58,23 +82,7 @@ public class SelectDogActivity extends AppCompatActivity{
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(i);
             });
-        } else {
-            android.util.Log.e("SelectDogActivity",
-                    "btnLogout is null — is activity_select_dog.xml the layout you set?");
         }
-
-        /*Check to see if we have a vla*/
-        userId = getIntent().getIntExtra(EXTRA_USER_ID, -1);
-        if (userId <= 0) {
-            finish();
-            return;
-        }
-
-        // Bind views
-        spinnerDogs = findViewById(R.id.spinnerDogs);
-        btnAddDog   = findViewById(R.id.btnAddDog);
-        btnContinue = findViewById(R.id.btnContinue);
-        tvWelcome   = findViewById(R.id.tvUserName);
 
         dogRepo = new DogRepository(getApplication());
         UserRepository userRepo = UserRepository.getRepository(getApplication());
@@ -89,8 +97,6 @@ public class SelectDogActivity extends AppCompatActivity{
             }
         });
 
-
-        // Setup spinner adapter
         spinnerAdapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_spinner_dropdown_item,
@@ -98,30 +104,22 @@ public class SelectDogActivity extends AppCompatActivity{
         );
         spinnerDogs.setAdapter(spinnerAdapter);
 
-        // Observe dogs for this user
-        dogRepo.getDogsForUser(userId).observe(this, new Observer<List<Dog>>() {
-            @Override
-            public void onChanged(List<Dog> dogs) {
-                currentDogs.clear();
-                spinnerAdapter.clear();
-                if (dogs != null) {
-                    currentDogs.addAll(dogs);
-                    for (Dog d : dogs) {
-                        spinnerAdapter.add(d.getName());
-                    }
-                }
-                spinnerAdapter.notifyDataSetChanged();
+        dogRepo.getDogsForUser(userId).observe(this, dogs -> {
+            currentDogs.clear();
+            spinnerAdapter.clear();
+            if (dogs != null) {
+                currentDogs.addAll(dogs);
+                for (Dog d : dogs) spinnerAdapter.add(d.getName());
             }
+            spinnerAdapter.notifyDataSetChanged();
         });
 
-        /*If you click on add dog you go to a new screen*/
         btnAddDog.setOnClickListener(v -> {
             Intent addIntent = new Intent(this, AddDogActivity.class);
             addIntent.putExtra(EXTRA_USER_ID, userId);
             startActivity(addIntent);
         });
 
-        /*When they click continue go to see training, new activity*/
         btnContinue.setOnClickListener(v -> {
             if (currentDogs.isEmpty()) {
                 Toast.makeText(
@@ -131,18 +129,18 @@ public class SelectDogActivity extends AppCompatActivity{
                 ).show();
                 return;
             }
-
             int pos = spinnerDogs.getSelectedItemPosition();
             int dogId = currentDogs.get(pos).getId();
+            String dogName = currentDogs.get(pos).getName();
 
             Intent next = new Intent(this, MainActivity.class);
             next.putExtra(EXTRA_USER_ID, userId);
             next.putExtra(EXTRA_DOG_ID,  dogId);
+            next.putExtra(EXTRA_DOG_NAME, dogName);
             startActivity(next);
         });
-
-
     }
+
 
 
     /* Intent factory */
