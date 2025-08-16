@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+
 import androidx.appcompat.app.AppCompatActivity;
 
 
@@ -47,15 +48,15 @@ public class SelectDogActivity extends AppCompatActivity{
         setContentView(R.layout.activity_select_dog);
 
 
-        userId = getIntent().getIntExtra(EXTRA_USER_ID, -1);
+        userId = readUserId(getIntent());
+
         if (userId <= 0) {
             int prefUserId = getSharedPreferences(getString(R.string.preference_file_key), MODE_PRIVATE)
                     .getInt(getString(R.string.preference_userId_key), -1);
             userId = prefUserId;
         }
         if (userId <= 0) {
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
+            startActivity(LoginActivity.makeIntent(SelectDogActivity.this));
             return;
         }
 
@@ -68,18 +69,8 @@ public class SelectDogActivity extends AppCompatActivity{
         btnLogout = findViewById(R.id.btnLogout);
         if (btnLogout != null) {
             btnLogout.setOnClickListener(v -> {
-                getSharedPreferences(getString(R.string.preference_file_key), MODE_PRIVATE)
-                        .edit()
-                        .remove(getString(R.string.preference_userId_key))
-                        .apply();
-                getSharedPreferences(PREFS, MODE_PRIVATE)
-                        .edit()
-                        .remove(KEY_LOGGED_IN_USER_ID)
-                        .apply();
-
-                Intent i = new Intent(SelectDogActivity.this, LoginActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(i);
+                startActivity(LoginActivity.makeIntent(SelectDogActivity.this));
+                finishAffinity();
             });
         }
 
@@ -126,9 +117,7 @@ public class SelectDogActivity extends AppCompatActivity{
         });
 
         btnAddDog.setOnClickListener(v -> {
-            Intent addIntent = new Intent(this, AddDogActivity.class);
-            addIntent.putExtra(EXTRA_USER_ID, userId);
-            startActivity(addIntent);
+            startActivity(AddDogActivity.makeIntent(SelectDogActivity.this, userId));
         });
 
         btnContinue.setOnClickListener(v -> {
@@ -144,21 +133,29 @@ public class SelectDogActivity extends AppCompatActivity{
             int dogId = currentDogs.get(pos).getId();
             String dogName = currentDogs.get(pos).getName();
 
-            Intent next = new Intent(this, MainActivity.class);
-            next.putExtra(EXTRA_USER_ID, userId);
-            next.putExtra(EXTRA_DOG_ID,  dogId);
-            next.putExtra(EXTRA_DOG_NAME, dogName);
-            startActivity(next);
+            startActivity(MainActivity.mainActivityIntentFactory(
+                    SelectDogActivity.this, userId, dogId, dogName));
         });
     }
 
-
-
-    /* Intent factory */
-    public static Intent selectDogIntentFactory(Context context, int userId) {
-        Intent intent = new Intent(context, SelectDogActivity.class);
-        intent.putExtra(EXTRA_USER_ID, userId);
-        return intent;
+    public static Intent makeIntent(Context ctx, int userId) {
+        Intent i = new Intent(ctx, SelectDogActivity.class);
+        i.putExtra(EXTRA_USER_ID, userId);
+        return i;
     }
+
+    public static int readUserId(Intent intent) {
+        return intent.getIntExtra(EXTRA_USER_ID, -1);
+    }
+
+    private int getSelectedDogId() {
+        Object item = (spinnerDogs != null) ? spinnerDogs.getSelectedItem() : null;
+        if (item instanceof Dog) {
+
+            return ((Dog) item).getId();
+        }
+        return -1;
+    }
+
 }
 
