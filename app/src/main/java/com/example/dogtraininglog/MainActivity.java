@@ -110,9 +110,7 @@ public class MainActivity extends AppCompatActivity {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                Intent i = new Intent(MainActivity.this, SelectDogActivity.class);
-                i.putExtra(SelectDogActivity.EXTRA_USER_ID, loggedInUserId);
-                startActivity(i);
+                startActivity(SelectDogActivity.makeIntent(MainActivity.this, loggedInUserId));
                 finish();
             }
         });
@@ -325,9 +323,7 @@ public class MainActivity extends AppCompatActivity {
 
         updateSharedPreference();
 
-        Intent i = new Intent(MainActivity.this, LoginActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(i);
+        startActivity(LoginActivity.makeIntent(MainActivity.this));
         finish();
     }
 
@@ -340,9 +336,11 @@ public class MainActivity extends AppCompatActivity {
         sharedPrefEditor.apply();}
 
     /*Intent - opens mainactivity*/
-    static Intent mainActivityIntentFactory(Context context, int userId){
+    static Intent mainActivityIntentFactory(Context context, int userId, int dogId, String dogName){
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra(MAIN_ACTIVITY_USER_ID, userId);
+        intent.putExtra(SelectDogActivity.EXTRA_DOG_ID,  dogId);
+        intent.putExtra(SelectDogActivity.EXTRA_DOG_NAME, dogName);
         return intent;
     }
 
@@ -364,9 +362,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.logoutMenuItem) {
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+            startActivity(LoginActivity.makeIntent(MainActivity.this));
             finish();
             return true;
         }

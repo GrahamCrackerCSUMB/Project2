@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +24,11 @@ public class LoginActivity extends AppCompatActivity {
     public static final String EXTRA_USERNAME = "com.example.dogtraininglog.extra.USERNAME";
 
 
+    public static Intent makeIntent(Context ctx) {
+        Intent i = new Intent(ctx, LoginActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        return i;
+    }
 
 
     /*Sets up view, listners, and inital state here.*/
@@ -49,8 +53,7 @@ public class LoginActivity extends AppCompatActivity {
 
         Button newUserBtn = findViewById(R.id.newUserButton);
         newUserBtn.setOnClickListener(v -> {
-            Intent i = new Intent(LoginActivity.this, RegisterActivity.class);
-            startActivity(i);
+            startActivity(RegisterActivity.makeIntent(LoginActivity.this));
         });
     }
 
@@ -109,11 +112,6 @@ public class LoginActivity extends AppCompatActivity {
             return new Intent(context, LoginActivity.class);
         }
 
-        /*Intent factory*/
-        public static Intent selectDogIntentFactory(Context context, int userId) {
-            Intent intent = new Intent(context, SelectDogActivity.class);
-            intent.putExtra(EXTRA_USER_ID, userId);
-            return intent;
-        }
+
 
 }

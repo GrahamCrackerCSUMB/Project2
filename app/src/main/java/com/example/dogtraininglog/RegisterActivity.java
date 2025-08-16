@@ -1,5 +1,6 @@
 package com.example.dogtraininglog;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -19,6 +20,10 @@ public class RegisterActivity extends AppCompatActivity {
     private Button createBtn;
     private DogTrainingLogRepository repo;
 
+    public static Intent makeIntent(Context ctx) {
+        return new Intent(ctx, RegisterActivity.class);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +31,10 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         Button back = findViewById(R.id.btnBackToLogin);
-        back.setOnClickListener(v -> finish());
+        back.setOnClickListener(v -> {
+            startActivity(LoginActivity.makeIntent(RegisterActivity.this));
+            finish();
+        });
 
         /*Bind views*/
         usernameEt = findViewById(R.id.registerUsername);
@@ -39,9 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
         createBtn.setOnClickListener(v -> attemptCreate());
 
         back.setOnClickListener(v -> {
-            Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(i);
+            startActivity(LoginActivity.makeIntent(RegisterActivity.this));
             finish();
         });
     }
