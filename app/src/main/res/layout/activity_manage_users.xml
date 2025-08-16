@@ -23,7 +23,28 @@
             android:layout_width="wrap_content"
             android:layout_height="525dp" />
         <!-- Bottom row: Back + Logout -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:orientation="horizontal"
+            android:padding="12dp"
+            android:weightSum="2">
 
+            <Button
+                android:id="@+id/btnBack"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Back" />
+
+            <Button
+                android:id="@+id/btnLogout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:text="Logout" />
+        </LinearLayout>
 
 
 
