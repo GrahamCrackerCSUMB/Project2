@@ -2,9 +2,11 @@ package com.example.dogtraininglog.database;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 /* This is a Data Access Object for the dog training table
@@ -21,13 +23,19 @@ public interface DogTrainingLogDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert (DogLog dogTrainingLog);
 
+    @Update
+    void update(DogLog dogLog);
+
+    @Delete
+    void delete(DogLog dogLog);
+
     /*Get ALL logs (for admins)*/
     @Query("SELECT * FROM " + DogTrainingDatabase.DOG_LOG_TABLE + " ORDER BY date DESC")
-    List<DogLog> getAllLogs();
+    LiveData<List<DogLog>> getAllLogs();
 
     /*Get ALL logs (for admins) - this might be a duplicate*/
     @Query("SELECT * FROM " + DogTrainingDatabase.DOG_LOG_TABLE + " ORDER BY date DESC" )
-    List<DogLog> getAllRecords();
+    LiveData<List<DogLog>>  getAllRecords();
 
     /*Get ALL logs (for admins) - this might be a duplicate*/
     @Query("SELECT * FROM " + DogTrainingDatabase.DOG_LOG_TABLE + " ORDER BY date DESC")
@@ -44,4 +52,8 @@ public interface DogTrainingLogDAO {
     /*Duplicate of above but livedata?*/
     @Query("SELECT * FROM " + DogTrainingDatabase.DOG_LOG_TABLE + " WHERE userId = :loggedInUserId ORDER BY date DESC")
     LiveData<List<DogLog>> getRecordsetUserIdLiveData(int loggedInUserId);
+
+    @Query("SELECT * FROM " + DogTrainingDatabase.DOG_LOG_TABLE +
+            " WHERE userId = :userId AND dogId = :dogId ORDER BY date DESC")
+    LiveData<List<DogLog>> getLogsForDog(int userId, int dogId);
 }

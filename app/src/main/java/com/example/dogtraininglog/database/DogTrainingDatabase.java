@@ -20,7 +20,7 @@ import java.util.concurrent.Executors;
 
 //Here we have defined our database.
 @TypeConverters(LocalDateTypeConverter.class)
-@Database(entities = {DogLog.class, User.class, Dog.class}, version = 6, exportSchema = false)
+@Database(entities = {DogLog.class, User.class, Dog.class}, version = 7, exportSchema = false)
 public abstract class DogTrainingDatabase extends RoomDatabase {
 
     /*Our table name contastants*/

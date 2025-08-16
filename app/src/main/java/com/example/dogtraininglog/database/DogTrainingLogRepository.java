@@ -21,16 +21,17 @@ public class DogTrainingLogRepository {
     private final DogTrainingLogDAO dogTrainingLogDAO;
     private final UserDAO userDAO;
 
-    private ArrayList<DogLog> allLogs;
+    private LiveData<List<DogLog>> allLogs;
 
     private static DogTrainingLogRepository repository;
 
     /*Get singleton room database instance, then get the DAO*/
+
     private DogTrainingLogRepository(Application application){
         DogTrainingDatabase db = DogTrainingDatabase.getDatabase(application);
         this.dogTrainingLogDAO = db.dogTrainingLogDAO();
         this.userDAO = db.userDAO();
-        this.allLogs = (ArrayList<DogLog>) this.dogTrainingLogDAO.getAllRecords();
+        this.allLogs = this.dogTrainingLogDAO.getAllRecords();
     }
 
     public static DogTrainingLogRepository getRepository(Application application){
@@ -55,12 +56,12 @@ public class DogTrainingLogRepository {
     }
 
 
-    public ArrayList<DogLog> getAllLogs() {
-        Future<ArrayList<DogLog>> future = DogTrainingDatabase.databaseWriteExecutor.submit(
-                new Callable<ArrayList<DogLog>>() {
+    public LiveData<List<DogLog>> getAllLogs() {
+        Future<LiveData<List<DogLog>>> future = DogTrainingDatabase.databaseWriteExecutor.submit(
+                new Callable<LiveData<List<DogLog>>>() {
                     @Override
-                    public ArrayList<DogLog> call() throws Exception {
-                        return (ArrayList<DogLog>) dogTrainingLogDAO.getAllRecords();
+                    public LiveData<List<DogLog>> call() throws Exception {
+                        return dogTrainingLogDAO.getAllRecords();
                     }
                 }
         );
@@ -73,6 +74,7 @@ public class DogTrainingLogRepository {
         return null;
     }
 
+
     public void insertDogLog(DogLog dogTrainingLog) {
         DogTrainingDatabase.databaseWriteExecutor.execute(() ->
         {
@@ -84,6 +86,9 @@ public class DogTrainingLogRepository {
             userDAO.insert(user);
     }
 
+    public LiveData<List<DogLog>> getLogsForDog(int userId, int dogId) {
+        return dogTrainingLogDAO.getLogsForDog(userId, dogId);
+    }
 
     public LiveData<List<DogLog>> getAllLogsLive() {
         return dogTrainingLogDAO.getAllLogsLive();
