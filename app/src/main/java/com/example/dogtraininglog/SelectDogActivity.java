@@ -3,13 +3,12 @@ package com.example.dogtraininglog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.lifecycle.Observer;
 
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,7 +34,7 @@ public class SelectDogActivity extends AppCompatActivity{
     private int userId;
 
     private Spinner spinnerDogs;
-    private Button btnAddDog, btnContinue, btnLogout;
+    private Button btnAddDog, btnContinue, btnLogout, btnAdmin;
     private TextView tvWelcome;
 
     private DogRepository dogRepo;
@@ -85,6 +84,9 @@ public class SelectDogActivity extends AppCompatActivity{
         }
 
         dogRepo = new DogRepository(getApplication());
+        btnAdmin = findViewById(R.id.btnAdmin);
+        btnAdmin.setVisibility(View.GONE); // hidden by default
+
         UserRepository userRepo = UserRepository.getRepository(getApplication());
 
         userRepo.getUserByIdLive(userId).observe(this, u -> {
@@ -94,6 +96,15 @@ public class SelectDogActivity extends AppCompatActivity{
                     name = Character.toUpperCase(name.charAt(0)) + name.substring(1);
                 }
                 tvWelcome.setText(name);
+
+                if (u.isAdmin()) {
+                    tvWelcome.append(" (ADMIN)");
+                    btnAdmin.setVisibility(View.VISIBLE);
+                    btnAdmin.setOnClickListener(v -> {
+                        Intent i = new Intent(this, AdminActivity.class);
+                        startActivity(i);
+                    });
+                }
             }
         });
 

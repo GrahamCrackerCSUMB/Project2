@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dogtraininglog.databinding.ActivityViewLogsBinding;
+import com.example.dogtraininglog.database.ViewLogsActivity;
 
 import java.util.List;
 

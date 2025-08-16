@@ -43,7 +43,7 @@ public abstract class DogTrainingDatabase extends RoomDatabase {
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
     //Here is our singleton method to get a database instance.
-    static DogTrainingDatabase getDatabase(final Context context) {
+    public static DogTrainingDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (DogTrainingDatabase.class) {
                 if (INSTANCE == null) {
@@ -77,5 +77,6 @@ public abstract class DogTrainingDatabase extends RoomDatabase {
             });
         }
     };
+
 
 }
