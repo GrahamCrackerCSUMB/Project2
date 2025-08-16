@@ -128,8 +128,7 @@ public class MainActivity extends AppCompatActivity {
 
         //User is not logged in at this point, go to login screen
         if(loggedInUserId == -1){
-            Intent intent = LoginActivity.loginIntentFactory(getApplicationContext());
-            startActivity(intent);
+            startActivity(LoginActivity.makeIntent(MainActivity.this));
         }
         updateSharedPreference();
 
@@ -373,7 +372,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         updateSharedPreference();
 
-        Intent sel = SelectDogActivity.selectDogIntentFactory(this, loggedInUserId);
+        Intent sel = SelectDogActivity.makeIntent(MainActivity.this, loggedInUserId);
         sel.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(sel);
         finish();

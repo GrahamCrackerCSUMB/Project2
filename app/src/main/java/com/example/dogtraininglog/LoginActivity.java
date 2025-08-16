@@ -82,8 +82,8 @@ public class LoginActivity extends AppCompatActivity {
 
 
                   /*start select dog activity*/
-                  startActivity(SelectDogActivity.selectDogIntentFactory(
-                          getApplicationContext(),
+                  startActivity(SelectDogActivity.makeIntent(
+                          LoginActivity.this,
                           user.getId()
                   ));
                   finish();

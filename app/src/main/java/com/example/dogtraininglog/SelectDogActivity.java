@@ -144,11 +144,5 @@ public class SelectDogActivity extends AppCompatActivity{
         return -1;
     }
 
-    /* Intent factory */
-    public static Intent selectDogIntentFactory(Context context, int userId) {
-        Intent intent = new Intent(context, SelectDogActivity.class);
-        intent.putExtra(EXTRA_USER_ID, userId);
-        return intent;
-    }
 }
 
