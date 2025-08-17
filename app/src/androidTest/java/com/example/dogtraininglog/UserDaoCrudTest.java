@@ -3,7 +3,6 @@ package com.example.dogtraininglog;
 import static org.junit.Assert.*;
 
 import android.content.Context;
-import androidx.room.Update;
 
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
