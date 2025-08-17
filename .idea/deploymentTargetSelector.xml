@@ -13,19 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="UserDaoCrudTest">
+      <SelectionState runConfigName="RegisterToLoginIntentTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="DogTrainingLogDaoCrudTest">
+      <SelectionState runConfigName="SelectDogToAddDogIntentTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="DogDaoCrudTest">
+      <SelectionState runConfigName="SelectDogToLoginIntentTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="DogInputValidatorTest">
+      <SelectionState runConfigName="SelectDogToMainIntentTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="badChars_returnsMessage()">
+      <SelectionState runConfigName="ViewLogsToLoginIntentTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
