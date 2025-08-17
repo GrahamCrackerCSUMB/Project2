@@ -22,7 +22,7 @@ import com.example.dogtraininglog.database.entities.Dog;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/*Here users land after log in and can choose or enter a dog.*/
 public class SelectDogActivity extends AppCompatActivity{
     public static final String EXTRA_USER_ID = "com.example.dogtraininglog.extra.USER_ID";
     public static final String EXTRA_DOG_ID  = "com.example.dogtraininglog.extra.DOG_ID";
@@ -45,6 +45,8 @@ public class SelectDogActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /*Inflate*/
         setContentView(R.layout.activity_select_dog);
 
 
@@ -60,12 +62,14 @@ public class SelectDogActivity extends AppCompatActivity{
             return;
         }
 
+        /*Bind views*/
         spinnerDogs = findViewById(R.id.spinnerDogs);
         btnAddDog   = findViewById(R.id.btnAddDog);
         btnContinue = findViewById(R.id.btnContinue);
         tvWelcome   = findViewById(R.id.tvUserName);
 
 
+        /*Log out user when they hit log out*/
         btnLogout = findViewById(R.id.btnLogout);
         if (btnLogout != null) {
             btnLogout.setOnClickListener(v -> {
@@ -79,11 +83,14 @@ public class SelectDogActivity extends AppCompatActivity{
         }
 
         dogRepo = new DogRepository(getApplication());
+
+        /*Special admin button should be hidden*/
         btnAdmin = findViewById(R.id.btnAdmin);
         btnAdmin.setVisibility(View.GONE);
 
         UserRepository userRepo = UserRepository.getRepository(getApplication());
 
+        /*Let's display the user name and make it nicely formatted*/
         userRepo.getUserByIdLive(userId).observe(this, u -> {
             if (u != null) {
                 String name = u.getUsername();
@@ -92,6 +99,7 @@ public class SelectDogActivity extends AppCompatActivity{
                 }
                 tvWelcome.setText(name);
 
+                /*If user is admin show them special buttons*/
                 if (u.isAdmin()) {
                     tvWelcome.append(" (ADMIN)");
                     btnAdmin.setVisibility(View.VISIBLE);
@@ -103,6 +111,7 @@ public class SelectDogActivity extends AppCompatActivity{
             }
         });
 
+        /*Wire up spinner*/
         spinnerAdapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_spinner_dropdown_item,
@@ -110,6 +119,7 @@ public class SelectDogActivity extends AppCompatActivity{
         );
         spinnerDogs.setAdapter(spinnerAdapter);
 
+        /*Get the user's dogs*/
         dogRepo.getDogsForUser(userId).observe(this, dogs -> {
             currentDogs.clear();
             spinnerAdapter.clear();
@@ -120,12 +130,15 @@ public class SelectDogActivity extends AppCompatActivity{
             spinnerAdapter.notifyDataSetChanged();
         });
 
+        /*Wire up add dog button go to other screen*/
         btnAddDog.setOnClickListener(v -> {
             startActivity(AddDogActivity.makeIntent(SelectDogActivity.this, userId));
         });
 
+        /*What happens if they try to continue with no dogs?*/
         btnContinue.setOnClickListener(v -> {
             if (currentDogs.isEmpty()) {
+                /*Yell at user to add one or pick one*/
                 Toast.makeText(
                         SelectDogActivity.this,
                         "Select a dog or add one.",
@@ -152,6 +165,7 @@ public class SelectDogActivity extends AppCompatActivity{
         return intent.getIntExtra(EXTRA_USER_ID, -1);
     }
 
+    /*Used when troubleshooting*/
     private int getSelectedDogId() {
         Object item = (spinnerDogs != null) ? spinnerDogs.getSelectedItem() : null;
         if (item instanceof Dog) {

@@ -9,7 +9,7 @@ public class UserEntityTest {
 
     @Test
     public void defaultIsAdminIsFalse_andToggleWorks() {
-        // Your User has a (String, String) ctor
+        // User has a (String, String)
         User user = new User("trainer1", "pass123");
 
         // default should be false
