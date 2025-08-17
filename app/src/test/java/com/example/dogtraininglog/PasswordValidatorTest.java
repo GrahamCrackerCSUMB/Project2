@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 
 public class PasswordValidatorTest {
 
-    // Example validation method — if you already have one, replace with your own
     private boolean isValidPassword(String password) {
         return password != null && password.length() >= 6;
     }

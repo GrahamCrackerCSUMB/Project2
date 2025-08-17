@@ -59,8 +59,8 @@ public class ManageUsersActivity extends AppCompatActivity {
         userDao.getAllUsers().observe(this, users -> {
             List<User> display = new ArrayList<>();
             for (User u : users) {
-                if ("admin1".equalsIgnoreCase(u.getUsername())) continue; // hide seed admin
-                if (u.getId() == currentUserId) continue;                  // hide yourself
+                if ("admin1".equalsIgnoreCase(u.getUsername())) continue;
+                if (u.getId() == currentUserId) continue;
                 display.add(u);
             }
 

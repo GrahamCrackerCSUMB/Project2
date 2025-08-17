@@ -80,7 +80,7 @@ public class SelectDogActivity extends AppCompatActivity{
 
         dogRepo = new DogRepository(getApplication());
         btnAdmin = findViewById(R.id.btnAdmin);
-        btnAdmin.setVisibility(View.GONE); // hidden by default
+        btnAdmin.setVisibility(View.GONE);
 
         UserRepository userRepo = UserRepository.getRepository(getApplication());
 

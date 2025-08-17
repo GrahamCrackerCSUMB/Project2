@@ -318,7 +318,7 @@ public class MainActivity extends AppCompatActivity {
 
         getSharedPreferences(getString(R.string.preference_file_key), MODE_PRIVATE)
                 .edit()
-                .remove(getString(R.string.preference_userId_key))  // or .putInt(..., -1)
+                .remove(getString(R.string.preference_userId_key))
                 .apply();
 
         startActivity(LoginActivity.makeIntent(MainActivity.this));

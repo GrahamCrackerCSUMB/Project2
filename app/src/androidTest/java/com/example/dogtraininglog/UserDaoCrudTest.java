@@ -28,7 +28,7 @@ public class UserDaoCrudTest {
     public void setUp() {
         Context ctx = ApplicationProvider.getApplicationContext();
         db = Room.inMemoryDatabaseBuilder(ctx, DogTrainingDatabase.class)
-                .allowMainThreadQueries()  // OK for tests
+                .allowMainThreadQueries()
                 .build();
         userDao = db.userDAO();
     }
