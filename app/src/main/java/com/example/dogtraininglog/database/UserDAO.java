@@ -6,6 +6,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.example.dogtraininglog.database.entities.User;
 
@@ -42,4 +43,7 @@ public interface UserDAO {
 
     @Query("SELECT * FROM usertable WHERE id = :id LIMIT 1")
     LiveData<User> getUserByIdLive(int id);
+
+    @Update(onConflict = OnConflictStrategy.ABORT)
+    int update(User user);
 }
