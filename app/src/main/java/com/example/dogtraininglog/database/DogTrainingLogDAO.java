@@ -53,7 +53,10 @@ public interface DogTrainingLogDAO {
     @Query("SELECT * FROM " + DogTrainingDatabase.DOG_LOG_TABLE + " WHERE userId = :loggedInUserId ORDER BY date DESC")
     LiveData<List<DogLog>> getRecordsetUserIdLiveData(int loggedInUserId);
 
+    /*get all when we have specific user id and dog, descending date order*/
     @Query("SELECT * FROM " + DogTrainingDatabase.DOG_LOG_TABLE +
             " WHERE userId = :userId AND dogId = :dogId ORDER BY date DESC")
+
+    /*Get the dog logs*/
     LiveData<List<DogLog>> getLogsForDog(int userId, int dogId);
 }

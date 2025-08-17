@@ -20,7 +20,7 @@ public class AdminActivity extends AppCompatActivity {
 
         btnAllLogs.setOnClickListener(v -> {
             Intent i = new Intent(this, ViewLogsActivity.class);
-            i.putExtra("EXTRA_ADMIN", true); // flag so ViewLogsActivity shows all logs
+            i.putExtra("EXTRA_ADMIN", true);
             startActivity(i);
         });
 

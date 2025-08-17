@@ -44,12 +44,15 @@ public interface DogDAO {
     @Query("SELECT * FROM dog ORDER BY name")
     LiveData<List<Dog>> getAllDogs();
 
+    /*Get a dog*/
     @Query("SELECT * FROM dog WHERE id = :dogId LIMIT 1")
     LiveData<com.example.dogtraininglog.database.entities.Dog> getDogByIdLive(int dogId);
 
+    /*get a dog by name and owner*/
     @Query("SELECT * FROM " + DogTrainingDatabase.DOG + " WHERE name = :name AND owner = :owner LIMIT 1")
     Dog findOneByNameOwner(String name, String owner);
 
+    /*Count the dogs*/
     @Query("SELECT COUNT(*) FROM " + DogTrainingDatabase.DOG)
     int countDogs();
 
