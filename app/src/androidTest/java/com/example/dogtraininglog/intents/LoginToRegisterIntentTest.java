@@ -23,6 +23,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+/*Does button to go from login activity to registeractivity work?*/
 @RunWith(AndroidJUnit4.class)
 public class LoginToRegisterIntentTest {
 
@@ -35,6 +36,7 @@ public class LoginToRegisterIntentTest {
         intending(IntentMatchers.anyIntent())
                 .respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, (Intent) null));
 
+        /*Click button and see if it works*/
         onView(androidx.test.espresso.matcher.ViewMatchers.withId(R.id.newUserButton)).perform(click());
         intended(hasComponent(RegisterActivity.class.getName()));
     }

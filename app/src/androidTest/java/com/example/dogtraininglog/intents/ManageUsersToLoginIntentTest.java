@@ -23,6 +23,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+/*Can we go from manage users to the login page when we click log out button?*/
 @RunWith(AndroidJUnit4.class)
 public class ManageUsersToLoginIntentTest {
 
@@ -30,11 +31,13 @@ public class ManageUsersToLoginIntentTest {
     @Rule public ActivityScenarioRule<ManageUsersActivity> activityRule =
             new ActivityScenarioRule<>(ManageUsersActivity.class);
 
+    /*Actual test*/
     @Test
     public void clickingLogoutFromManageUsers_opensLogin() {
         intending(IntentMatchers.anyIntent())
                 .respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
 
+        /*Click and see what happens*/
         onView(androidx.test.espresso.matcher.ViewMatchers.withId(R.id.btnLogout)).perform(click());
         intended(hasComponent(LoginActivity.class.getName()));
     }

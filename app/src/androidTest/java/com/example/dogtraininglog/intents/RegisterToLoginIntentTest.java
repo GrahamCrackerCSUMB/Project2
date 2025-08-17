@@ -23,6 +23,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+/*Can we go from register user to log in page?*/
 @RunWith(AndroidJUnit4.class)
 public class RegisterToLoginIntentTest {
 
@@ -35,6 +36,7 @@ public class RegisterToLoginIntentTest {
         intending(IntentMatchers.anyIntent())
                 .respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
 
+        /*Click button, see what happens*/
         onView(androidx.test.espresso.matcher.ViewMatchers.withId(R.id.btnBackToLogin)).perform(click());
         intended(hasComponent(LoginActivity.class.getName()));
     }

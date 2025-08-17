@@ -33,16 +33,22 @@ import org.junit.runner.RunWith;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+/*Can we from seeing all of our training logs to the log in page?*/
 @RunWith(AndroidJUnit4.class)
 public class ViewLogsToLoginIntentTest {
 
     @Rule public IntentsRule intentsRule = new IntentsRule();
 
+    /*the training log page requires a dog, so let's make a fake one*/
     @Test
     public void clickingLogoutFromViewLogs_opensLogin() throws Exception {
+
+        /*Get databasse ready*/
         Context ctx = ApplicationProvider.getApplicationContext();
         DogTrainingDatabase db = DogTrainingDatabase.getDatabase(ctx);
         CountDownLatch latch = new CountDownLatch(1);
+
+        /*Insert a test user and create a dog*/
         DogTrainingDatabase.databaseWriteExecutor.execute(() -> {
             try { db.userDAO().insert(new User("admin1","admin1")); } catch (Exception ignored) {}
             Dog d = new Dog();
@@ -52,16 +58,21 @@ public class ViewLogsToLoginIntentTest {
             try { db.dogDAO().insert(d); } catch (Exception ignored) {}
             latch.countDown();
         });
+        /*We have to wait bc this fails otherwise*/
         latch.await(1, TimeUnit.SECONDS);
 
+        /*Pretend we are entering with the dog we created and the user*/
         Intent intent = new Intent(ctx, ViewLogsActivity.class)
                 .putExtra(SelectDogActivity.EXTRA_USER_ID, 1)
                 .putExtra(SelectDogActivity.EXTRA_DOG_ID, 1);
 
+        /*Launch the training page*/
         ActivityScenario<ViewLogsActivity> scenario = ActivityScenario.launch(intent);
 
         intending(IntentMatchers.anyIntent())
                 .respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
+
+        /*Click button, see what happens.*/
         onView(withId(R.id.btnLogout)).perform(click());
         intended(hasComponent(LoginActivity.class.getName()));
 

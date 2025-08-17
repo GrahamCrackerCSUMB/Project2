@@ -31,6 +31,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+
+/*Can we go from the select dog page to the training log page?*/
 @RunWith(AndroidJUnit4.class)
 public class SelectDogToMainIntentTest {
 
@@ -44,11 +46,13 @@ public class SelectDogToMainIntentTest {
                     ).putExtra(SelectDogActivity.EXTRA_USER_ID, 1)
             );
 
+    /*First lets add a dog in there bc the spinner needs something to search*/
     @Before
     public void seedDog() throws Exception {
         activityRule.getScenario().onActivity(a -> {
             DogTrainingDatabase db = DogTrainingDatabase.getDatabase(a.getApplicationContext());
             DogTrainingDatabase.databaseWriteExecutor.execute(() -> {
+                /*Create a new dog*/
                 Dog d = new Dog();
                 try { d.setUserId(1); } catch (Exception ignored) {}
                 try { d.setName("Test Dog"); } catch (Exception ignored) {}
@@ -56,6 +60,7 @@ public class SelectDogToMainIntentTest {
                 try { db.dogDAO().insert(d); } catch (Exception ignored) {}
             });
         });
+        /*We have to wait otherwise this can fail*/
         Thread.sleep(500);
     }
 
@@ -64,8 +69,13 @@ public class SelectDogToMainIntentTest {
         intending(IntentMatchers.anyIntent())
                 .respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
 
+        /*Open spinnger*/
         onView(withId(R.id.spinnerDogs)).perform(click());
+
+        /*Select the dog we entered*/
         onData(anything()).atPosition(0).perform(click());
+
+        /*click and see what happens*/
         onView(withId(R.id.btnContinue)).perform(click());
 
         intended(hasComponent(MainActivity.class.getName()));

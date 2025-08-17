@@ -25,6 +25,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+/*Can we go from the select do to the login page?*/
 @RunWith(AndroidJUnit4.class)
 public class SelectDogToLoginIntentTest {
 
@@ -42,6 +43,7 @@ public class SelectDogToLoginIntentTest {
     public void clickingLogout_opensLogin() {
         intending(IntentMatchers.anyIntent())
                 .respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
+        /*We click and see what happens*/
         onView(withId(R.id.btnLogout)).perform(click());
         intended(hasComponent(LoginActivity.class.getName()));
     }
