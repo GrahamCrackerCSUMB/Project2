@@ -29,12 +29,18 @@ public class AdminToLoginIntentTest {
     @Rule public ActivityScenarioRule<AdminActivity> activityRule =
             new ActivityScenarioRule<>(AdminActivity.class);
 
+    /*Check that when we click logout we go to login screen*/
     @Test
     public void clickingLogoutFromAdmin_opensLogin() {
+
+        /*Give fake okays so that it will run*/
         intending(IntentMatchers.anyIntent())
                 .respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
 
+        /*Click logout button*/
         onView(androidx.test.espresso.matcher.ViewMatchers.withId(R.id.btnLogout)).perform(click());
+
+        /*Did it work?*/
         intended(hasComponent(LoginActivity.class.getName()));
     }
 }

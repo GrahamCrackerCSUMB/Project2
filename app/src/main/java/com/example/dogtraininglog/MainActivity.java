@@ -19,7 +19,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.activity.OnBackPressedCallback; // <-- add at top with other imports
+import androidx.activity.OnBackPressedCallback;
 
 
 import com.example.dogtraininglog.database.DogRepository;
@@ -32,7 +32,6 @@ import com.example.dogtraininglog.viewholders.DogTrainingLogAdapter;
 import com.example.dogtraininglog.viewholders.DogTrainingViewModel;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {

@@ -23,7 +23,7 @@ import java.util.concurrent.Executors;
 @Database(entities = {DogLog.class, User.class, Dog.class}, version = 7, exportSchema = false)
 public abstract class DogTrainingDatabase extends RoomDatabase {
 
-    /*Our table name contastants*/
+    /*Our table name constants*/
     public static final String USER_TABLE = "usertable";
     private static final String DATABASE_NAME = "DogTrainingDatabase";
     public static final String DOG = "Dog";

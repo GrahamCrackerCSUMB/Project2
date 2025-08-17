@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dogtraininglog.databinding.ActivityViewLogsBinding;
-import com.example.dogtraininglog.database.ViewLogsActivity;
+
 
 import java.util.List;
 
@@ -90,13 +90,13 @@ public class ViewLogsActivity extends AppCompatActivity {
         DogTrainingLogRepository repo = DogTrainingLogRepository.getRepository(getApplication());
 
         if (isAdminView) {
-            // ADMIN: show every log
+            /*Admins get to see everything*/
             repo.getAllLogsLive().observe(this, logs -> {
                 allLogs = (logs != null) ? logs : new ArrayList<>();
                 adapter.updateList(allLogs);
             });
         } else {
-            // TRAINER: show only this dog’s logs
+            /*regular users do not*/
             repo.getLogsForDog(userId, dogId).observe(this, logs -> {
                 allLogs = (logs != null) ? logs : new ArrayList<>();
                 adapter.updateList(allLogs);

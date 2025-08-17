@@ -44,7 +44,7 @@ public class DogLog {
     public DogLog(){}
 
 
-
+    /*To strong which is used in recylcer*/
     @NonNull
     @Override
     public String toString() {
@@ -108,7 +108,7 @@ public class DogLog {
         this.date = date;
     }
 
-    /*Thisd is the trainer*/
+    /*This is the trainer*/
     public int getUserId() {
         return userId;
     }

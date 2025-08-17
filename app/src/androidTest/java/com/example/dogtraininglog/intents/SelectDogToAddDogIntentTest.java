@@ -25,6 +25,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+
+/*Can we go from the select dog page to the add dog page?*/
 @RunWith(AndroidJUnit4.class)
 public class SelectDogToAddDogIntentTest {
 
@@ -42,6 +44,8 @@ public class SelectDogToAddDogIntentTest {
     public void clickingAddDog_opensAddDog() {
         intending(IntentMatchers.anyIntent())
                 .respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
+
+        /*We just click and see what shakes out*/
         onView(withId(R.id.btnAddDog)).perform(click());
         intended(hasComponent(AddDogActivity.class.getName()));
     }

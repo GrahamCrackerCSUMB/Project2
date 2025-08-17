@@ -30,6 +30,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+/*Does button to go from log into select dog page work?*/
 @RunWith(AndroidJUnit4.class)
 public class LoginToSelectDogIntentTest {
 
@@ -37,15 +38,22 @@ public class LoginToSelectDogIntentTest {
     @Rule public ActivityScenarioRule<LoginActivity> activityRule =
             new ActivityScenarioRule<>(LoginActivity.class);
 
+    /*Because the page is protected by log in, give it a fake user*/
     @Before
     public void seedKnownUser() throws Exception {
         activityRule.getScenario().onActivity(activity -> {
             DogTrainingDatabase db = DogTrainingDatabase.getDatabase(activity.getApplicationContext());
             DogTrainingDatabase.databaseWriteExecutor.execute(() -> {
                 UserDAO dao = db.userDAO();
+
+                /*Clear all users so it is empty*/
                 try { dao.deleteAll(); } catch (Exception ignored) {}
+
+                /*Crete a default user*/
                 User admin = new User("admin1", "admin1");
                 try { admin.setAdmin(true); } catch (Exception ignored) {}
+
+                /*Insert user*/
                 try { dao.insert(admin); } catch (Exception ignored) {}
             });
         });
@@ -56,8 +64,12 @@ public class LoginToSelectDogIntentTest {
     public void clickingLogin_opensSelectDog() {
         intending(IntentMatchers.anyIntent())
                 .respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
+
+        /*enter in username and password*/
         onView(withId(R.id.userNameLoginEditText)).perform(replaceText("admin1"), closeSoftKeyboard());
         onView(withId(R.id.passwordLoginEditText)).perform(replaceText("admin1"), closeSoftKeyboard());
+
+        /*Click button, see what happens.*/
         onView(withId(R.id.loginButton)).perform(click());
         intended(hasComponent(SelectDogActivity.class.getName()));
     }

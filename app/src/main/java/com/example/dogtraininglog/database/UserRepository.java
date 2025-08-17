@@ -4,8 +4,7 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.dogtraininglog.database.DogTrainingDatabase;
-import com.example.dogtraininglog.database.UserDAO;
+
 import com.example.dogtraininglog.database.entities.User;
 
 public class UserRepository {
@@ -13,6 +12,7 @@ public class UserRepository {
 
     private final UserDAO userDAO;
 
+    /*Get singleton room database instance, then get the DAO*/
     private UserRepository(Application application) {
         DogTrainingDatabase db = DogTrainingDatabase.getDatabase(application);
         this.userDAO = db.userDAO();
@@ -28,6 +28,7 @@ public class UserRepository {
         return repository;
     }
 
+    /*Get user by id*/
     public LiveData<User> getUserByIdLive(int id) {
         return userDAO.getUserByIdLive(id);
     }

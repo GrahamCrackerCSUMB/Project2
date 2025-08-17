@@ -23,6 +23,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+
+/*Check that clicking manage users launches manage users*/
 @RunWith(AndroidJUnit4.class)
 public class AdminToManageUsersIntentTest {
 
@@ -35,6 +37,7 @@ public class AdminToManageUsersIntentTest {
         intending(IntentMatchers.anyIntent())
                 .respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
 
+        /*Find button and click, check if it works*/
         onView(androidx.test.espresso.matcher.ViewMatchers.withId(R.id.btnManageUsers)).perform(click());
         intended(hasComponent(ManageUsersActivity.class.getName()));
     }

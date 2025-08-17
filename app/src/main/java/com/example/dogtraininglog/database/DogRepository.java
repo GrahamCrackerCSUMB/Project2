@@ -1,20 +1,17 @@
 package com.example.dogtraininglog.database;
 
-import android.app.Application;
+
 import android.content.Context;
-import android.util.Log;
+
 
 import androidx.lifecycle.LiveData;
 
-import com.example.dogtraininglog.MainActivity;
-import com.example.dogtraininglog.database.entities.User;
+
 import com.example.dogtraininglog.database.entities.Dog;
 
-import java.util.ArrayList;
+
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+
 
 /*Repositories centralize threading. This means you can't block the main thread.*/
 public class DogRepository {
@@ -50,11 +47,8 @@ public class DogRepository {
         return dogDAO.countDogsForUser(userId);
     }
 
-    /*Add a dog*/
-   // public void insert(Dog dog) {
-    //    DogTrainingDatabase.databaseWriteExecutor.execute(() -> dogDAO.insert(dog));
-    //}
 
+    /*Add a dog*/
     public void insert(Dog dog) {
         DogTrainingDatabase.databaseWriteExecutor.execute(() -> {
             try {
@@ -79,6 +73,8 @@ public class DogRepository {
     public void delete(Dog dog) {
         DogTrainingDatabase.databaseWriteExecutor.execute(() -> dogDAO.delete(dog));
     }
+
+    /*Get dog by id*/
     public LiveData<com.example.dogtraininglog.database.entities.Dog> getDogByIdLive(int dogId) {
         return dogDAO.getDogByIdLive(dogId);
     }

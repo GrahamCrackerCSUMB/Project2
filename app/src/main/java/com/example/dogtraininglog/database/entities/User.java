@@ -80,6 +80,6 @@ public class User {
 
     @Override
     public String toString() {
-        return username;  // or include more info like: return username + (isAdmin ? " (Admin)" : "");
+        return username;
     }
 }

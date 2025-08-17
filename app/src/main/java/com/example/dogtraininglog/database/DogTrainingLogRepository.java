@@ -55,7 +55,7 @@ public class DogTrainingLogRepository {
         return null;
     }
 
-
+    /*Get all the logs*/
     public LiveData<List<DogLog>> getAllLogs() {
         Future<LiveData<List<DogLog>>> future = DogTrainingDatabase.databaseWriteExecutor.submit(
                 new Callable<LiveData<List<DogLog>>>() {
@@ -69,12 +69,12 @@ public class DogTrainingLogRepository {
             return future.get();
         }catch(InterruptedException | ExecutionException e){
             e.printStackTrace();
-            Log.i(MainActivity.TAG,"Problem when getting all GymLogs in the repository");
+            Log.i(MainActivity.TAG,"Problem when getting all logs in the repository");
         }
         return null;
     }
 
-
+    /*Insert a log*/
     public void insertDogLog(DogLog dogTrainingLog) {
         DogTrainingDatabase.databaseWriteExecutor.execute(() ->
         {
@@ -82,30 +82,37 @@ public class DogTrainingLogRepository {
         });
     }
 
+    /*Insert a user*/
     public void insertUser(User... user) {
             userDAO.insert(user);
     }
 
+    /*Get logs for the dog*/
     public LiveData<List<DogLog>> getLogsForDog(int userId, int dogId) {
         return dogTrainingLogDAO.getLogsForDog(userId, dogId);
     }
 
+    /*get all of the logs*/
     public LiveData<List<DogLog>> getAllLogsLive() {
         return dogTrainingLogDAO.getAllLogsLive();
     }
 
+    /*Get user by username*/
     public LiveData<User> getUserByUserName(String username) {
         return userDAO.getUserByUserName(username);
     }
 
+    /*Get user by id*/
     public LiveData<User> getUserByUserId(int userId) {
         return userDAO.getUserByUserId(userId);
     }
 
+    /*Get all logs by a spefic user*/
     public LiveData<List<DogLog>>getAllLogsByUserIdLiveData(int loggedInUserId){
         return dogTrainingLogDAO.getRecordsetUserIdLiveData(loggedInUserId);
     }
 
+    /*Still works. get all logs by user id but better to use live data above*/
     @Deprecated
     public ArrayList<DogLog> getAllLogsByUserId(int loggedInUserId) {
         Future<ArrayList<DogLog>> future = DogTrainingDatabase.databaseWriteExecutor.submit(

@@ -24,6 +24,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+/*Ccan we go from adminactivity page to viewlogs page?*/
 @RunWith(AndroidJUnit4.class)
 public class AdminToViewLogsIntentTest {
 
@@ -36,6 +37,7 @@ public class AdminToViewLogsIntentTest {
         intending(IntentMatchers.anyIntent())
                 .respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
 
+        /*Click button and see if it works*/
         onView(androidx.test.espresso.matcher.ViewMatchers.withId(R.id.btnAllLogs)).perform(click());
         intended(hasComponent(ViewLogsActivity.class.getName()));
     }
