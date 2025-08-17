@@ -47,4 +47,10 @@ public interface DogDAO {
     @Query("SELECT * FROM dog WHERE id = :dogId LIMIT 1")
     LiveData<com.example.dogtraininglog.database.entities.Dog> getDogByIdLive(int dogId);
 
+    @Query("SELECT * FROM " + DogTrainingDatabase.DOG + " WHERE name = :name AND owner = :owner LIMIT 1")
+    Dog findOneByNameOwner(String name, String owner);
+
+    @Query("SELECT COUNT(*) FROM " + DogTrainingDatabase.DOG)
+    int countDogs();
+
 }
